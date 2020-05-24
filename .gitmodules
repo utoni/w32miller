@@ -1,0 +1,9 @@
+[submodule "source/tools/host/go/cncproxy/deps/src/github.com/gorilla/mux"]
+	path = source/tools/host/go/cncproxy/deps/src/github.com/gorilla/mux
+	url = https://github.com/gorilla/mux
+[submodule "source/tools/host/go/cncmaster/deps/src/github.com/gorilla/mux"]
+	path = source/tools/host/go/cncmaster/deps/src/github.com/gorilla/mux
+	url = https://github.com/gorilla/mux
+[submodule "source/tools/host/go/cncproxy/deps/src/github.com/zhuangsirui/binpacker"]
+	path = source/tools/host/go/cncproxy/deps/src/github.com/zhuangsirui/binpacker
+	url = https://github.com/zhuangsirui/binpacker

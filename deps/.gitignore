@@ -1,0 +1,5 @@
+/sysroot
+/.stamp-python
+/get-pip.py
+*.tar.gz
+*.tar.bz2

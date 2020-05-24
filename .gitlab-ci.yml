@@ -1,0 +1,240 @@
+image: debian:stable
+
+stages:
+  - deps
+  - build
+  - test-host
+  - test-wine
+
+cache:
+  key: toolchain
+  paths:
+    - deps/sysroot/
+
+makedeps:
+  script:
+    - if [ "x${FORCE_TOOLCHAIN_REBUILD:-}" != "x" ]; then rm -rf deps/sysroot; fi
+    - export DEBIAN_FRONTEND=noninteractive && apt-get update -qq && apt-get install -y -qq coreutils wget tar gzip bzip2 patch cmake make binutils gcc g++ autoconf automake flex bison texinfo libz-dev libssl-dev libevent-dev
+    - export TERM=linux && { test -d deps/sysroot || deps/makedeps.sh; }
+  artifacts:
+    expire_in: 1 week
+    paths:
+      - deps/build.log
+  stage: deps
+  only:
+    - master
+  tags:
+    - docker
+    - multi-runner
+
+makedeps-again:
+  script:
+    - export DEBIAN_FRONTEND=noninteractive && apt-get update -qq && apt-get install -y -qq coreutils wget tar gzip bzip2 patch cmake make binutils gcc g++ autoconf automake flex bison texinfo libz-dev libssl-dev libevent-dev
+    - export DEBIAN_FRONTEND=noninteractive && apt-get update -qq && apt-get install -y -qq git
+    - rm -rf deps
+    - git clean -df .
+    - git checkout .
+    - export TERM=linux && deps/makedeps.sh
+  artifacts:
+    expire_in: 1 week
+    paths:
+      - deps/build.log
+  stage: deps
+  only:
+    - master
+  when: manual
+  allow_failure: true
+  tags:
+    - docker
+    - multi-runner
+
+build:
+  script:
+    - ls -al deps
+    - export DEBIAN_FRONTEND=noninteractive && apt-get update -qq && apt-get install -y -qq coreutils flex bison texinfo cmake make
+    - export TERM=linux && cmake .
+    - export TERM=linux && make
+  artifacts:
+    expire_in: 1 week
+    paths:
+      - bin/
+  stage: build
+  only:
+    - master
+  dependencies:
+    - makedeps
+  tags:
+    - docker
+    - multi-runner
+
+build-debug:
+  script:
+    - ls -al deps
+    - export DEBIAN_FRONTEND=noninteractive && apt-get update -qq && apt-get install -y -qq coreutils flex bison texinfo cmake make
+    - export TERM=linux && cmake -DBUILD_PYDIST=1 -DBUILD_ALL_TOOLS=1 -DBUILD_TESTS=1 -DEXTRA_VERBOSE=1 -DHTTP_LOCALHOST=1 -DINFECT_DUMMY=1 .
+    - export TERM=linux && make
+  artifacts:
+    expire_in: 1 week
+    paths:
+      - bin/
+  stage: build
+  only:
+    - master
+  dependencies:
+    - makedeps
+  tags:
+    - docker
+    - multi-runner
+
+build-release:
+  script:
+    - ls -al deps
+    - export DEBIAN_FRONTEND=noninteractive && apt-get update -qq && apt-get install -y -qq coreutils flex bison texinfo cmake make
+    - export TERM=linux && cmake -DBUILD_ALL_TOOLS=1 -DBUILD_TESTS=1 .
+    - export TERM=linux && make
+  artifacts:
+    expire_in: 1 week
+    paths:
+      - bin/
+  stage: build
+  only:
+    - master
+  dependencies:
+    - makedeps
+  tags:
+    - docker
+    - multi-runner
+
+tests-debug:
+  cache: {}
+  script:
+    - dpkg --add-architecture i386
+    - export DEBIAN_FRONTEND=noninteractive && apt-get update -qq && apt-get install -y -qq wine wine32 wine64 xvfb
+    - nohup Xvfb :99 &
+    - export XVFB_PID=$! && export DISPLAY=:99
+    - wine bin/tests.exe 1>&2
+    - wine bin/loadmodule.exe bin/libw32miller-shared.dll
+    - wine bin/loadmodule.exe bin/libw32miller_pre-shared.dll
+    - wine bin/decrypter.exe bin/libw32miller-shared.dll
+    - wine bin/decrypter.exe bin/libw32miller_pre-shared.dll
+    - wine bin/decrypter.exe bin/loader_base.exe
+    - wine bin/decrypter.exe bin/loader_base_enc.exe
+    - wine bin/decrypter.exe bin/release.exe
+    - wine bin/loader_decrypt.exe >/dev/null
+    - wine bin/disasm.exe -fbin/release.exe >/dev/null
+    - kill -SIGKILL ${XVFB_PID}
+  stage: test-wine
+  only:
+    - master
+  dependencies:
+    - build-debug
+  tags:
+    - docker
+    - multi-runner
+
+tests-release:
+  cache: {}
+  script:
+    - dpkg --add-architecture i386
+    - export DEBIAN_FRONTEND=noninteractive && apt-get update -qq && apt-get install -y -qq wine wine32 wine64 xvfb
+    - nohup Xvfb :99 &
+    - export XVFB_PID=$! && export DISPLAY=:99
+    - wine bin/tests.exe 1>&2 || { tail -n10 tests.log; false; }
+    - wine bin/loadmodule.exe bin/libw32miller-shared.dll
+    - wine bin/loadmodule.exe bin/libw32miller_pre-shared.dll
+    - kill -SIGKILL ${XVFB_PID}
+  stage: test-wine
+  only:
+    - master
+  dependencies:
+    - build-release
+  tags:
+    - docker
+    - multi-runner
+
+tests-host-tools:
+  script:
+    - deps/sysroot/bin/python2.7 batch/pycrypt_test.py 128
+    - bin/strings-host
+    - bin/hdr_crypt-host xor include/xor_strings.h .tmp_xor_strings_gen.h XOR_KEY
+    - echo 'import sys, imp; mod = imp.load_dynamic("pyloader", "bin/pyloader"); print mod; mod.info()' | deps/sysroot/bin/python2.7
+    - echo 'import sys, imp; mod = imp.load_dynamic("pycrypt", "bin/pycrypt"); print mod; mod.info()' | deps/sysroot/bin/python2.7
+  stage: test-host
+  only:
+    - master
+  dependencies:
+    - build-release
+  tags:
+    - docker
+    - multi-runner
+
+tests-release-mdk:
+  script:
+    - dpkg --add-architecture i386
+    - export DEBIAN_FRONTEND=noninteractive && apt-get update -qq && apt-get install -y -qq wine wine32 wine64 xvfb
+    - nohup Xvfb :99 &
+    - export XVFB_PID=$!
+    - export DISPLAY=:99
+    - wine bin/dummy.exe 5
+    - wine bin/release.exe 5 &
+    - export WINBIN_PID=$!
+    - sleep 6 && { kill -SIGKILL ${WINBIN_PID} || true; }
+    - sleep 1
+    - wine bin/libtor.exe deps/sysroot/i686-w64-mingw32/lib/libtor.dll &
+    - export WINTOR_PID=$!
+    - sleep 10 && { kill -SIGKILL ${WINTOR_PID} || true; }
+    - exit
+  stage: test-wine
+  only:
+    - master
+  dependencies:
+    - build-release
+  tags:
+    - docker
+    - multi-runner
+
+tests-debug-mdk:
+  script:
+    - dpkg --add-architecture i386
+    - export DEBIAN_FRONTEND=noninteractive && apt-get update -qq && apt-get install -y -qq wine wine32 wine64 xvfb
+    - nohup Xvfb :99 &
+    - export XVFB_PID=$!
+    - export DISPLAY=:99
+    - cd bin
+    - wine dummy.exe 5
+    - wine loader_base_enc.exe 15 &
+    - export WINBIN_PID=$!
+    - sleep 16 && { kill -SIGKILL ${WINBIN_PID} || true; }
+    - sleep 1
+    - wine dummy.exe 5
+    - exit
+  stage: test-wine
+  only:
+    - master
+  dependencies:
+    - build-debug
+  tags:
+    - docker
+    - multi-runner
+
+sast:
+  stage: test-wine
+  image: docker:stable
+  variables:
+    DOCKER_DRIVER: overlay2
+  when: manual
+  allow_failure: true
+  services:
+    - docker:stable-dind
+  script:
+    - export SP_VERSION=$(echo "$CI_SERVER_VERSION" | sed 's/^\([0-9]*\)\.\([0-9]*\).*/\1-\2-stable/')
+    - docker run
+        --env SAST_CONFIDENCE_LEVEL="${SAST_CONFIDENCE_LEVEL:-3}"
+        --env SAST_ANALYZER_IMAGES=find-sec-bugs,flawfinder
+        --volume "$PWD:/code"
+        --volume /var/run/docker.sock:/var/run/docker.sock
+        "registry.gitlab.com/gitlab-org/security-products/sast:$SP_VERSION" /app/bin/run /code
+  artifacts:
+    expire_in: 1 week
+    paths: [gl-sast-report.json]
+

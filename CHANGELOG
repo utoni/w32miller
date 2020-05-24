@@ -1,0 +1,524 @@
+CHANGELOG
+----------------------
+
+[]
+ * made compat.c great agein and using generic string factory
+ * fixed bug in addStrEntry(...) for root section
+ * using a centralised string factory for decrypting XOR'd strings
+ * improved string decryption, more string sections and section marker (only for kernel32 funcs)
+ * made tests/decrypter/disasm/loader_decrypt build optional
+ * loader_decrypt uses additional dbg version
+ * enumerate all logical devices and get some information + tests
+ * _GetLogicalDriveStringsA, _GetDriveTypeA, _GetDiskFreeSpaceA, re-enabled anti av/debug
+ * using generic and easy2use string decryption factory, added string decryption tester, upgraded hdr_crypt to add more information (struct/enum defines)
+ * bintostr buf should be a const char*
+ * always align encrypted XOR'd buffers to 4 byte (for now, might be changed to 8 in the future)
+ * introduced string decryption factory
+ * added release.exe target (uses DLL/LOADER86 without _DEBUG and _PRE_RELEASE), cleaned up loader.h/main.c
+ * LOADER_X86 uses same section as debug version, `strip -R` may sometimes exit with a non-zero value (dunno why)
+ * irc: private message (+binary,+buffered), bot control utils: is(space|upper|lower|alpha|digit) + __xbintostr(...) has newSizPtr arg
+ * TODOs 'n TYPOs
+ * using _VirtualFree in DLL for loader allocated memory
+ * irc -> GetVolumeInfo(...)
+ * fixed compat ptr check fail
+ * missing important TODO
+ * updated TODOs, encrypted SOCK(STR|CMD)s
+ * disabled SO_RCVTIMEO (should not be less than the irc server PING time!)
+ * using more flexible GETPROC(...) macro, added information gathering and shell execute code
+ * using setsockopt(...) to set recv/send buffer_size/timeouts
+ * removed vasprintf from compat (was a hell of a bugload), replaced it with mini_snprintf
+ * added simple compat __xprintf(...) test
+ * added MYASSERT_SILENT && windows null device
+ * using CONTEXT_FULL instead of CONTEXT_CONTROL, initSocket(...) in NetThread and not before
+ * removed unused ExitProcess(...), replaces GetProcessHeap(...) with HeapCreate(...)
+ * FormatMessage is useless, added tests, code cleanup, TODO: fix Heap error (source currently unknown)
+ * _SwitchToThread() + startThread(...) + hNetThread
+ * irc testing /3
+ * irc testing /2
+ * moved SWITCH_ENDIANESS to utils.h and renamed it to SWAP_ENDIANESS32, also added 16 bit version, removed unused bswap(...)
+ * irc testing
+ * added <time.h> back if non-mingw build
+ * improved compat header, other include cleanups
+ * new tool binary: ircmsg (test irc module)
+ * new tool binary: ircmsg (test irc module)
+ * compat include fixups (compat.h) is now *MAIN* header file
+ * added irc module in DLL build + compat fixups
+ * updated README && TODO
+ * ported small irc bot
+ * added `const` qualifier for code readability
+ * iv/key in xor32n_pcbc_crypt_buf(...) should be const
+ * patching works now from already encrypted/patched binaries
+ * validating PE header e_lfanew (>=0x40 and <=0x80)
+ * gimme more `comments`
+ * loadmodule works now as expected
+ * runbin works with current DLL
+ * full dll encryption
+ * removing fingerprints (GCC/LD version info) from all created miller binaries (dll/bin)
+ * more readable code indentation
+ * DLL loader patching: XOR key/iv gen, Loader Strings encryption
+ * added rebuild warnings
+ * full Multithreading enabled
+ * dummy waits before it terminates (may be useful for multithreading tests)
+ * DLL Multithreading support
+ * added Thread/IPC functions
+ * added warnings + names for thread/ipc functions
+ * loader uses rep movsd instead if slower rep movsb
+ * VirtualAlloc uses different PAGE_ACCESS flags
+ * Removed unused loader data e.g. imageBase, sections adr/siz etc
+ * DLL Encryption done (TODO: fix encryption of infected binaries, see source/patch.c)
+ * removing *complete* DosStub
+ * README/doc update
+ * introduced new loader data: flags (DLL Flags)
+ * patchLoader: String Encryption/Patching
+ * string encryption works (TODO: PATCHING!)
+ * pycrypt_test: check {plain|cipher}text length
+ * bug fixed: wrong iv/key size in pycrypt
+ * get 32 bit uint buffer
+ * pyloader/pycrypt prep
+ * cosmetics + pyloader macro funcs
+ * file_crypt not used anymore, replaced with pycrypt
+ * pycrypt+test
+ * pycrypt: fixed memory leaks
+ * pycrypt: fixed aes ctx alloc bug CMake: added crypt.c as dep (XOR)
+ * better python module integration, pycrypt module init
+ * patch loader section with dll data
+ * removed unused infection video
+ * added own GetProcAdr function
+ * install *.bin files, rundll -> runbin
+ * install *.bin files, rundll -> runbin
+ * preparations for dll section encryption
+ * preparations for dll section encryption
+ * crypt dll with offset and size
+ * crypt dll with offset and size
+ * better host-tools building
+ * better host-tools building
+ * removed loader nops and use two different loaders (release and pre-release)
+ * removed loader nops and use two different loaders (release and pre-release)
+ * genShellcode accepts section as argument, removed loader_noPE32 build (useless in near future)
+ * genShellcode accepts section as argument, removed loader_noPE32 build (useless in near future)
+ * more loader targets, loader_base_enc
+ * more loader targets, loader_base_enc
+ * shellcode generator append mode
+ * shellcode generator append mode
+ * extended loader patching for NOPE32 builds (adrOfEntry,imageBase,sizOfImage,sizOfHeader)
+ * extended loader patching for NOPE32 builds (adrOfEntry,imageBase,sizOfImage,sizOfHeader)
+ * get binary data from PE32 e.g. imagebase, adrofentry, etc.
+ * get binary data from PE32 e.g. imagebase, adrofentry, etc.
+ * get objdump data like adrOfEntry, imageBase, etc.
+ * get objdump data like adrOfEntry, imageBase, etc.
+ * patchLoader.py uses generated pyloader.so to modify the loader trailer
+ * patchLoader.py uses generated pyloader.so to modify the loader trailer
+ * added infectable dummy_gui
+ * added infectable dummy_gui
+ * pyloader.so python module (patchLoader.py can access struct loader_x86_data easily)
+ * pyloader.so python module (patchLoader.py can access struct loader_x86_data easily)
+ * loader_base.exe: use w32miller.bin as dll payload
+ * loader_base.exe: use w32miller.bin as dll payload
+ * ivkeysize macro, dynamic stack memory reserve, rep movsd for string copy
+ * ivkeysize macro, dynamic stack memory reserve, rep movsd for string copy
+ * loader reserved stackmem can now modified by the dll
+ * loader reserved stackmem can now modified by the dll
+ * use pipes or stdout for debugging msgs
+ * use pipes or stdout for debugging msgs
+ * tell cmake about generated headers, compile pipe_(server|client) only if needed
+ * tell cmake about generated headers, compile pipe_(server|client) only if needed
+ * pipe_(server|client) output , use default miller path , strings , hdr crypt parses double (escape) backslash (..\\..)
+ * pipe_(server|client) output , use default miller path , strings , hdr crypt parses double (escape) backslash (..\\..)
+ * dont force user options, enable pipes options (-D_USE_PIPES=1)
+ * dont force user options, enable pipes options (-D_USE_PIPES=1)
+ * fixed ESI_PTRDLL and ESI_SIZDLL offsets, using faster rep movsb instead of slower __ldr_memcpy implementation
+ * fixed ESI_PTRDLL and ESI_SIZDLL offsets, using faster rep movsb instead of slower __ldr_memcpy implementation
+ * removing gcc fingerprint from distorm objects
+ * removing gcc fingerprint from distorm objects
+ * added simple named pipe server/client (future use in malware for app-to-user and app-to-app(IPC) communication)
+ * added simple named pipe server/client (future use in malware for app-to-user and app-to-app(IPC) communication)
+ * new loader prep..
+ * new loader prep..
+ * crypt.c tests
+ * crypt.c tests
+ * output host-tools{CMakeFiles, Makefile, etc} in ${BUILD_DIR}/host-tools instead of ${BUILD_DIR}/bin/host-tools
+ * output host-tools{CMakeFiles, Makefile, etc} in ${BUILD_DIR}/host-tools instead of ${BUILD_DIR}/bin/host-tools
+ * removed useless loader macros, additional pe loader tests
+ * removed useless loader macros, additional pe loader tests
+ * __attribute__((gcc_struct)) added (don't use ms_struct for this project!)
+ * __attribute__((gcc_struct)) added (don't use ms_struct for this project!)
+ * __printByteBuf allowed in tests for debugging purposes
+ * __printByteBuf allowed in tests for debugging purposes
+ * add print byte buffer option (aLOT output!)
+ * add print byte buffer option (aLOT output!)
+ * nasm: dynamic includes
+ * nasm: dynamic includes
+ * optimised host-tools cmakelists
+ * optimised host-tools cmakelists
+ * string (en|de)cryption fully works
+ * string (en|de)cryption fully works
+ * host-tools force target
+ * host-tools force target
+ * sub-cmake base build (host-tools)
+ * sub-cmake base build (host-tools)
+ * loader string decryption works
+ * loader string decryption works
+ * endmarker check + test
+ * endmarker check + test
+ * better error printing
+ * better error printing
+ * endmarker check/test, loader compensate _DEBUG instructions with NOPs
+ * endmarker check/test, loader compensate _DEBUG instructions with NOPs
+ * removed static lib build (not rly used)
+ * removed static lib build (not rly used)
+ * host tools got their chance, not needed in this directory anymore
+ * host tools got their chance, not needed in this directory anymore
+ * fixed typ0
+ * fixed typ0
+ * build host tools with source/tools/host/CMakeLists.txt, %include decrypter source (dont build two *.obj files since it fucks up my loader)
+ * build host tools with source/tools/host/CMakeLists.txt, %include decrypter source (dont build two *.obj files since it fucks up my loader)
+ * define _LOADER_MARKER for all modules
+ * define _LOADER_MARKER for all modules
+ * patcher prints now loader offset to console (if pre-release)
+ * patcher prints now loader offset to console (if pre-release)
+ * host tools CMakeLists (builds hdr_crypt && file_crypt for host system)
+ * host tools CMakeLists (builds hdr_crypt && file_crypt for host system)
+ * cmake encrypt loader strings prep, file_crypt searches for endmarker if -l missing
+ * cmake encrypt loader strings prep, file_crypt searches for endmarker if -l missing
+ * decrypter prep
+ * decrypter prep
+ * decrypter prep
+ * decrypter prep
+ * endmarker search + ldr dll crypt (does not modify loader)
+ * endmarker search + ldr dll crypt (does not modify loader)
+ * show argument in usage, prep for dll encryption
+ * show argument in usage, prep for dll encryption
+ * superfluous xor32n_pcbc_decrypter removed
+ * superfluous xor32n_pcbc_decrypter removed
+ * loader string encryption finally works
+ * loader string encryption finally works
+ * linux mmap'd file, encrypt loader strings
+ * linux mmap'd file, encrypt loader strings
+ * loader string encryption iv/key-size
+ * loader string encryption iv/key-size
+ * better binary diff (unified)
+ * better binary diff (unified)
+ * file_crypt encrypt loader strings option
+ * file_crypt encrypt loader strings option
+ * better hex string regex
+ * better hex string regex
+ * file crypter reads loader contents and encrypt loader strings, TODO: write part encrypted strings to disk
+ * file crypter reads loader contents and encrypt loader strings, TODO: write part encrypted strings to disk
+ * loader is now linux-gcc compatible, file_crypt uses endmarker
+ * loader is now linux-gcc compatible, file_crypt uses endmarker
+ * patchLoader shows marker offset
+ * patchLoader shows marker offset
+ * loader ENDMARKER is now more dynamicially e.g. it can be specified by cmake
+ * loader ENDMARKER is now more dynamicially e.g. it can be specified by cmake
+ * decrypter compilation for i386 target only (atm)
+ * decrypter compilation for i386 target only (atm)
+ * file crypter iv/key hex str arguments
+ * file crypter iv/key hex str arguments
+ * file crypter key/iv/offset/size prep
+ * file crypter key/iv/offset/size prep
+ * loader patching is now done by section name and endmarker
+ * loader patching is now done by section name and endmarker
+ * better loader patching (argument parsing, controlled output, etc)
+ * better loader patching (argument parsing, controlled output, etc)
+ * better decrypter output
+ * better decrypter output
+ * exported mapfile linux/mingw
+ * exported mapfile linux/mingw
+ * xor32n_pcbc asm x86 decrypter
+ * xor32n_pcbc asm x86 decrypter
+ * decrypter stuff
+ * decrypter stuff
+ * helper function module for tools
+ * helper function module for tools
+ * new module crypt.c: xor32 stuff, refactoring
+ * new module crypt.c: xor32 stuff, refactoring
+ * crypt module
+ * crypt module
+ * decrypter-asm/-tool skeleton
+ * decrypter-asm/-tool skeleton
+ * dll crypt done
+ * dll crypt done
+ * loader: prep for xor32 string encryption
+ * loader: prep for xor32 string encryption
+ * objdump should not ignore zeroes, loader byte pad
+ * objdump should not ignore zeroes, loader byte pad
+ * patchLoader.py modifies loader conforming to loader_x86.h
+ * patchLoader.py modifies loader conforming to loader_x86.h
+ * dll encryption preparations
+ * dll encryption preparations
+ * dont patch instructions which changes eip and uses relative addressing (will be fixed in the future, TODO)
+ * dont patch instructions which changes eip and uses relative addressing (will be fixed in the future, TODO)
+ * halfByte should be 1 byte (uchar) small instead of 4 bytes (int)
+ * halfByte should be 1 byte (uchar) small instead of 4 bytes (int)
+ * added objdump command output + todo
+ * added objdump command output + todo
+ * xor32n_pcbc_decrypt_buf
+ * xor32n_pcbc_decrypt_buf
+ * xor32n_pcbc encryption works
+ * xor32n_pcbc encryption works
+ * xor32pcbc (en|de)cryption
+ * xor32pcbc (en|de)cryption
+ * fixed bintostr halfbyte calc bug (wrong typesize)
+ * fixed bintostr halfbyte calc bug (wrong typesize)
+ * xor32 (en|de)cryption
+ * xor32 (en|de)cryption
+ * fixed issues on ubuntu
+ * fixed issues on ubuntu
+ * better output
+ * better output
+ * mem.c not used anymore except for XMemAlign
+ * mem.c not used anymore except for XMemAlign
+ * dynamically generate (DLL|DLL)SECTION from include/xor_strings.h
+ * dynamically generate (DLL|DLL)SECTION from include/xor_strings.h
+ * anti(debug|vm) is now disabled if pre-release
+ * anti(debug|vm) is now disabled if pre-release
+ * fixed invalid ptr free
+ * fixed invalid ptr free
+ * malware dll injection testvideo
+ * re-alloc bugfix for bAddSection
+ * compat cosmetics + GetCurrentProcessId,AttachConsole for Pre-Releases, added definitions deny including some annoying header files
+ * cosmetics + latex work sample (for presentation purposes)
+ * markdown brainfuck
+ * typ0
+ * changelog, markdown cosmetics
+ * cosmetics + set number of simlultaneous build jobs in deps/makedeps.sh
+ * cosmetics
+ * README.md update
+ * display correct filename
+ * anti vm counter measures, LoadLibraryA support, generate random hex string
+ * fixed cmake deps, 'get miller section from include'-script
+ * comments
+ * Xor32 hash gen
+ * get miller dll section name dynamically from include/xor_strings.h
+ * fixed wrong header include
+ * multijob build errors fixed
+ * fixed shellcode bug (hardcoded path), some basic error detection
+ * cmake support for out-of-source-dir builds
+ * moved genhash,randstring to utils, dll needs it too
+ * basic irc bot modified (WSA compat)
+ * changed section names, dll_crypt cleanup
+ * added irc bot stub (needs definitly some modification e.g. support threads?)
+ * base64 encode
+ * fixed wrong pe-hdr calculations, patching support works, loader struct initialised correctly
+ * README update
+ * CHANGELOG, CONTRIBUTING.md visuals
+ * README, TODO, DOC update
+ * basic code injection/patching works
+ * OffsetToRva(...), PtrToOffset(...), PtrToRva(...), added test cases
+ * print a binary buffer
+ * added some useless bytes to the loader (so it can be dissambled correctly)
+ * disabled nasm optimisations
+ * fixed shellcode gen bug
+ * cmake depend+custom cmd fix
+ * gpg encrypt git archive
+ * update README /4
+ * update README /3
+ * update REAMDE /2
+ * update README
+ * cmake improvments, genShellcode supports multiprocess build job
+ * fixed aes for x64 hosts
+ * loader decrypter, cmake improvments, preparation for aes.c compilation on x64 systems
+ * mingw compat header not useable, crypt compile under gnu linux, aes/utils does not require mingw to compile
+ * build log + timestamps
+ * build host gcc (non-mingw), used for pre-compile encryption + gcc4.9.4
+ * cmake stuff
+ * build log + timestamps
+ * cmake stuff /11
+ * cmake stuff /10
+ * build host gcc (non-mingw), used for pre-compile encryption
+ * cmake stuff /9
+ * cmake stuff /8
+ * cmake stuff /7
+ * cmake stuff /6
+ * cmake stuiff /5
+ * cmake stuff /4
+ * cmake stuff /3
+ * cmake stuff /2
+ * cmake stuff
+ * use ${PYTHON} binary
+ * bump to Python-2.7.13
+ * multiplatform compatiblity
+ * python2.7 deps
+ * added mingw compat for non mingw builds
+ * colored output
+ * install stripped deps
+ * added flex dep for wine
+ * stable nasm release 2.12.02
+ * added (wine|nasm) build (wine and flex>2.6.1 breaks build)
+ * added sysroot/${MINGW} to $PATH
+ * additional checks (e.g. alrdy configured)
+ * fixed `set -e` -> BASH_EXITONFAIL check
+ * comments + format fix
+ * pe + patch stuff
+ * print GetLastError()
+ * rundll can now load the module at a given address (force relocation!)
+ * added nopsleds + loader struct
+ * updated CHANGELOG
+ * patchJMP
+ * added bswap inline func (gcc builtin)
+ * _MILLER_IMAGEBASE macro ifdef, bAddSection(...) checks if section alrdy exists
+ * fixed README typ0, fixed loader_base format string
+ * added PE related tests
+ * basic binary patch enviroment
+ * binary patcher skeleton
+ * renamed TODO.txt
+ * Add contribution guide
+ * Add license
+ * generated changelog
+ * added markdown README
+ * todo + basic doc
+ * added additional debug check
+ * added GetLastError after execution
+ * linker script: dont sort sections, changed miller ldflags (linker map etc)
+ * moved unused tools to tools/old
+ * loader forces dll to relocate if _MILLER_IMAGEBASE is set
+ * pe relocation should finally work
+ * fixed VirtualAlloc, it overwrites ecx (sizeof malwareDLL)
+ * crt fix for returned dll value (0xdeadc0de)
+ * .idata and .edata should stay in both miller dlls so windows api LoadLibrary(...) will accept it
+ * manual dll relocation work in progress
+ * dont use file alignment because windows loader doesnt like it, pre release keeps .edata and .idata, crt checks now if started by loader or LoadLibrary(...)
+ * disabled -Wl,--file-alignment, windows loader does not like it
+ * loadmodule forces loaded malware dll to relocate
+ * fixed broken dll reloc section -,-
+ * -ffreestanding
+ * whitespaces..
+ * loadmodule bin
+ * loader VirtualAlloc without specific base address if previously failed
+ * fixed header size check, improved bAddSection(...), cmake_strip
+ * loader decryption, anti-debug
+ * fixed loader_base stuff, rundll shows return value now in hex&&dec
+ * python scripts should return a non-zero value on a fatal err, removed unused win batch script
+ * lightwight x86-64 decoding works
+ * config fix
+ * build mingw64 from scratch /2
+ * build mingw64 from scratch
+ * make dependencies (mingw64 ..)
+ * linker script changes
+ * internal x86-asm decoding
+ * python script removing DOS header stub + unused header values
+ * loader runtime decryption
+ * embedded loader shellcode in malware dll
+ * crypt editable define keyname
+ * fixed aes encrypt buffer size, build tests with default linker script
+ * encrypt escaped c strings (e.g. \xFF\x90\x00 ...), loader shellcode encryption
+ * section xor macros
+ * loader vars
+ * pe section (writeable/executable)
+ * disasm decode internal
+ * smth
+ * minimalized linker script
+ * improved file handling && pe infection
+ * +SetFilePointer,GetLastError && format(...) realloc ptr fail
+ * fixed compatibility malfunction during tests ( missing a few COMPAT(...) )
+ * custom gnu linker script ..
+ * merge text and rdata segments
+ * fixed compile errors
+ * libw32miller distorm link, disasm distorm interface, disasm tool
+ * distorm disasm tool
+ * distorm tests
+ * changed compat format (%lu & %ld is now 64 bit wide), added compat (v)asprintf
+ * bether cmake cmds, distorm testing wip
+ * distorm integrated, testing ..
+ * distorm assembler
+ * export function pointer to struct
+ * encode register
+ * mnemonic parser
+ * moved header files to header directory
+ * aes dynamic memory ilog/sbox
+ * generate loader shellcode, winapi function name encryption
+ * string encryption done
+ * compile string encryption (xor)
+ * added stack-based xor crypt support (dynamic mem alloc not neccessary)
+ * added XOR string encryption and pre-compile header generation
+ * check for wine+python
+ * added compat
+ * aescrypt encrypts string before dll compilation
+ * aescrypt skeleton + aes randomkey
+ * asm + aes
+ * added basic asm (en|de)coder and test
+ * added 0xdeadc0de as loader end marker
+ * support changeable loader section for loader_base testing
+ * optimized
+ * python patch script (patching test loader, loader_base)
+ * malware dll injection
+ * -,-
+ * infection works
+ * added CMake rule (build allowed in topdir only) added project config in top cmake dll sets and gets image base
+ * fixed rundll bug (import data directory NULL), nullExportTable nulls import table too
+ * fixed wrong register assignment in rundll, dont use ExitProcess() in main anymore
+ * done
+ * loader + crt works, 3 more idata functions needs to be resolved manually
+ * loader memcpy header/sections (theres an error somewhere ..)
+ * major loader fixes
+ * get address of GetProcAddress from kernel32 export table through PEB->Ldr
+ * better string loading and stack layout
+ * get kernel base adr from PEB with pre calculated hash
+ * CRT works now correct (exits __start subroutine if __main returns NULL)
+ * fixed .miller section address (win7 does not like not-continuos sections ;)
+ * loader reads all necessary pe data, added nasm cmake compile flags
+ * updated TODO
+ * codeblock not supported anymore ..
+ * loadlib is now obsolete..
+ * loader read pe (1/2)
+ * fixed custom command bug
+ * doin da loada
+ * loader stuff ..
+ * removing rdata$zzz manually with objcopy
+ * be less verbose
+ * print imported libs from pe
+ * prerelease target
+ * codeblocks fix
+ * *.nasm -> *.asm
+ * added tools cmake
+ * better gcc fingerprint removing, CMakeLists compiles nasm sources
+ * removed libudis86 ..
+ * renamed src to source
+ * better compat testing + cmake tests
+ * tests cmake
+ * added libudis disasm as base for encoder
+ * cmake compatibility, cz codeblocks sucks
+ * cmake compatibility, cz codeblocks sucks
+ * CMake compatible..
+ * new target: base relocations
+ * remove linker major+minor version, infector todo, loader stub
+ * pe section injection
+ * fixed null-byte error in compat testing, some asm stuff, removed uselss pe infection routines
+ * binary diff
+ * LOG_MARKER uses now printf_ex, python script zeros unused export table
+ * format_ex, printf_ex compat works
+ * dont use `unsigned long long int` as function parameter ... -_-
+ * fixed (u)lltoa
+ * cbp2mk not needed anymore ..
+ * (u)lltoa
+ * using brctl is so much fun
+ * math, meth, magic
+ * yo_mama
+ * m0w
+ * fu
+ * miller is now relocatable
+ * compat
+ * str* tests
+ * m0w
+ * m0wL
+ * dummy blah
+ * removing gcc fingerprint finished
+ * need to fix removeGccVersion.py on devlap..
+ * blablatest
+ * blubb
+ * compat
+ * tests
+ * py
+ * target test
+ * test, loadlib
+ * codeblocks targets finally working
+ * happy nightmares
+ * merry xmas
+ * m0wL
+ * muh
+ * blubb
+ * blubb
+ * blah
+ * section adder + codeblock project file
+ * ReadPEFile, Next: ReadSections
+ * initial commit

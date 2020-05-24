@@ -1,0 +1,18 @@
+[TODO]
+
+1. finish cncproxy/cncmaster in a way that they send commands to an infected machine and receive the output
+  * cncmaster sends commands to cncproxy, which forwards it to the target(s)
+  * target(s) send command output to cncproxy, which forwards it to the cncmaster
+
+2. more machine information gathering (keylogger/screenshots)
+3. Set/Check and use Loader Flags (see loader.h)
+4. recrypt strings on every new infected binary
+5. hdrcrypt: use 8 byte key and pad strings less than 8 byte (random bytes after NUL)
+6. spreading (local/usb/net)
+7. use named shared memory segment for ipc on local machine
+
+8. replace __xultoa with mini_itoa !?
+9. packing/unpacking
+
+last but not least:
+    - make use of _API_VERSION macro

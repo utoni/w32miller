@@ -1,0 +1,932 @@
+diff -Naur tor-0.3.0.9/configure tor-0.3.0.9-libtor/configure
+--- tor-0.3.0.9/configure
++++ tor-0.3.0.9-libtor/configure
+@@ -8278,7 +8278,7 @@
+   TOR_LIB_IPHLPAPI=-liphlpapi
+   # Some of the cargo-cults recommend -lwsock32 as well, but I don't
+   # think it's actually necessary.
+-  TOR_LIB_GDI=-lgdi32
++  TOR_LIB_GDI="-lgdi32 -lcrypt32 $TOR_LIB_WS32"
+ else
+   TOR_LIB_WS32=
+   TOR_LIB_GDI=
+diff -Naur tor-0.3.0.9/Makefile.in tor-0.3.0.9-libtor/Makefile.in
+--- tor-0.3.0.9/Makefile.in
++++ tor-0.3.0.9-libtor/Makefile.in
+@@ -2695,19 +2695,19 @@
+ .SUFFIXES: .c .log .o .obj .test .test$(EXEEXT) .trs
+ am--refresh: Makefile
+ 	@:
+-$(srcdir)/Makefile.in:  $(srcdir)/Makefile.am $(srcdir)/src/include.am $(srcdir)/src/ext/include.am $(srcdir)/src/trunnel/include.am $(srcdir)/src/common/include.am $(srcdir)/src/or/include.am $(srcdir)/src/test/include.am $(srcdir)/src/tools/include.am $(srcdir)/src/win32/include.am $(srcdir)/src/config/include.am $(srcdir)/src/test/fuzz/include.am $(srcdir)/doc/include.am $(srcdir)/contrib/include.am $(am__configure_deps)
+-	@for dep in $?; do \
+-	  case '$(am__configure_deps)' in \
+-	    *$$dep*) \
+-	      echo ' cd $(srcdir) && $(AUTOMAKE) --foreign'; \
+-	      $(am__cd) $(srcdir) && $(AUTOMAKE) --foreign \
+-		&& exit 0; \
+-	      exit 1;; \
+-	  esac; \
+-	done; \
+-	echo ' cd $(top_srcdir) && $(AUTOMAKE) --foreign Makefile'; \
+-	$(am__cd) $(top_srcdir) && \
+-	  $(AUTOMAKE) --foreign Makefile
++#$(srcdir)/Makefile.in:  $(srcdir)/Makefile.am $(srcdir)/src/include.am $(srcdir)/src/ext/include.am $(srcdir)/src/trunnel/include.am $(srcdir)/src/common/include.am $(srcdir)/src/or/include.am $(srcdir)/src/test/include.am $(srcdir)/src/tools/include.am $(srcdir)/src/win32/include.am $(srcdir)/src/config/include.am $(srcdir)/src/test/fuzz/include.am $(srcdir)/doc/include.am $(srcdir)/contrib/include.am $(am__configure_deps)
++#	@for dep in $?; do \
++#	  case '$(am__configure_deps)' in \
++#	    *$$dep*) \
++#	      echo ' cd $(srcdir) && $(AUTOMAKE) --foreign'; \
++#	      $(am__cd) $(srcdir) && $(AUTOMAKE) --foreign \
++#		&& exit 0; \
++#	      exit 1;; \
++#	  esac; \
++#	done; \
++#	echo ' cd $(top_srcdir) && $(AUTOMAKE) --foreign Makefile'; \
++#	$(am__cd) $(top_srcdir) && \
++#	  $(AUTOMAKE) --foreign Makefile
+ Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
+ 	@case '$?' in \
+ 	  *config.status*) \
+@@ -2719,8 +2719,8 @@
+ 	esac;
+ $(srcdir)/src/include.am $(srcdir)/src/ext/include.am $(srcdir)/src/trunnel/include.am $(srcdir)/src/common/include.am $(srcdir)/src/or/include.am $(srcdir)/src/test/include.am $(srcdir)/src/tools/include.am $(srcdir)/src/win32/include.am $(srcdir)/src/config/include.am $(srcdir)/src/test/fuzz/include.am $(srcdir)/doc/include.am $(srcdir)/contrib/include.am $(am__empty):
+ 
+-$(top_builddir)/config.status: $(top_srcdir)/configure $(CONFIG_STATUS_DEPENDENCIES)
+-	$(SHELL) ./config.status --recheck
++#$(top_builddir)/config.status: $(top_srcdir)/configure $(CONFIG_STATUS_DEPENDENCIES)
++#	$(SHELL) ./config.status --recheck
+ 
+ $(top_srcdir)/configure:  $(am__configure_deps)
+ 	$(am__cd) $(srcdir) && $(AUTOCONF)
+diff -Naur tor-0.3.0.9/src/common/backtrace.c tor-0.3.0.9-libtor/src/common/backtrace.c
+--- tor-0.3.0.9/src/common/backtrace.c
++++ tor-0.3.0.9-libtor/src/common/backtrace.c
+@@ -1,3 +1,4 @@
++#if 0
+ /* Copyright (c) 2013-2016, The Tor Project, Inc. */
+ /* See LICENSE for licensing information */
+ 
+@@ -246,3 +247,4 @@
+   tor_free(bt_version);
+ }
+ 
++#endif
+diff -Naur tor-0.3.0.9/src/common/backtrace.h tor-0.3.0.9-libtor/src/common/backtrace.h
+--- tor-0.3.0.9/src/common/backtrace.h
++++ tor-0.3.0.9-libtor/src/common/backtrace.h
+@@ -1,3 +1,4 @@
++#if 0
+ /* Copyright (c) 2013-2016, The Tor Project, Inc. */
+ /* See LICENSE for licensing information */
+ 
+@@ -19,3 +20,4 @@
+ 
+ #endif
+ 
++#endif
+diff -Naur tor-0.3.0.9/src/common/util_bug.c tor-0.3.0.9-libtor/src/common/util_bug.c
+--- tor-0.3.0.9/src/common/util_bug.c
++++ tor-0.3.0.9-libtor/src/common/util_bug.c
+@@ -71,7 +71,9 @@
+   tor_snprintf(buf, sizeof(buf),
+                "Assertion %s failed in %s at %s:%u",
+                expr, func, fname, line);
++#if 0
+   log_backtrace(LOG_ERR, LD_BUG, buf);
++#endif
+ }
+ 
+ /** Helper for tor_assert_nonfatal: report the assertion failure. */
+@@ -104,7 +106,9 @@
+                  "Non-fatal assertion %s failed in %s at %s:%u",
+                  expr, func, fname, line);
+   }
++#if 0
+   log_backtrace(LOG_WARN, LD_BUG, buf);
++#endif
+ 
+ #ifdef TOR_UNIT_TESTS
+   if (failed_assertion_cb) {
+diff -Naur tor-0.3.0.9/src/or/config.c tor-0.3.0.9-libtor/src/or/config.c
+--- tor-0.3.0.9/src/or/config.c
++++ tor-0.3.0.9-libtor/src/or/config.c
+@@ -331,6 +331,7 @@
+   V(FetchUselessDescriptors,     BOOL,     "0"),
+   OBSOLETE("FetchV2Networkstatus"),
+   V(GeoIPExcludeUnknown,         AUTOBOOL, "auto"),
++#if 0
+ #ifdef _WIN32
+   V(GeoIPFile,                   FILENAME, "<default>"),
+   V(GeoIPv6File,                 FILENAME, "<default>"),
+@@ -340,6 +341,7 @@
+   V(GeoIPv6File,                 FILENAME,
+     SHARE_DATADIR PATH_SEPARATOR "tor" PATH_SEPARATOR "geoip6"),
+ #endif
++#endif
+   OBSOLETE("Group"),
+   V(GuardLifetime,               INTERVAL, "0 minutes"),
+   V(HardwareAccel,               BOOL,     "0"),
+@@ -696,6 +698,8 @@
+   { NULL, NULL }
+ };
+ 
++static int default_socks_port = 59050;
++
+ #ifdef _WIN32
+ static char *get_windows_conf_root(void);
+ #endif
+@@ -711,8 +715,11 @@
+ static char *get_bindaddr_from_transport_listen_line(const char *line,
+                                                      const char *transport);
+ static int parse_ports(or_options_t *options, int validate_only,
+-                              char **msg_out, int *n_ports_out,
+-                              int *world_writable_control_socket);
++                              char **msg_out, int *n_ports_out
++#if 0
++                              , int *world_writable_control_socket
++#endif
++                      );
+ static int check_server_ports(const smartlist_t *ports,
+                               const or_options_t *options,
+                               int *num_low_ports_out);
+@@ -727,8 +734,10 @@
+ static int opt_streq(const char *s1, const char *s2);
+ static int parse_outbound_addresses(or_options_t *options, int validate_only,
+                                     char **msg);
++#if 0
+ static void config_maybe_load_geoip_files_(const or_options_t *options,
+                                            const or_options_t *old_options);
++#endif
+ static int options_validate_cb(void *old_options, void *options,
+                                void *default_options,
+                                int from_setconf, char **msg);
+@@ -774,6 +783,9 @@
+ /** List of port_cfg_t for all configured ports. */
+ static smartlist_t *configured_ports = NULL;
+ 
++int get_socks_proxy_port(void) { return default_socks_port; }
++void set_socks_proxy_port(int new_port) { default_socks_port = new_port; }
++
+ /** Return the contents of our frontpage string, or NULL if not configured. */
+ MOCK_IMPL(const char*,
+ get_dirportfrontpage, (void))
+@@ -1284,7 +1296,11 @@
+     }
+ 
+     /* Adjust the port configuration so we can launch listeners. */
+-    if (parse_ports(options, 0, msg, &n_ports, NULL)) {
++    if (parse_ports(options, 0, msg, &n_ports
++#if 0
++                , NULL
++#endif
++       )) {
+       if (!*msg)
+         *msg = tor_strdup("Unexpected problem parsing port config");
+       goto rollback;
+@@ -1877,7 +1893,9 @@
+     return -1;
+   }
+ 
++#if 0
+   config_maybe_load_geoip_files_(options, old_options);
++#endif
+ 
+   if (geoip_is_loaded(AF_INET) && options->GeoIPExcludeUnknown) {
+     /* ExcludeUnknown is true or "auto" */
+@@ -2993,7 +3011,9 @@
+   config_line_t *cl;
+   const char *uname = get_uname();
+   int n_ports=0;
++#if 0
+   int world_writable_control_socket=0;
++#endif
+ 
+   tor_assert(msg);
+   *msg = NULL;
+@@ -3016,8 +3036,11 @@
+         "for details.", uname);
+   }
+ 
+-  if (parse_ports(options, 1, msg, &n_ports,
+-                  &world_writable_control_socket) < 0)
++  if (parse_ports(options, 1, msg, &n_ports
++#if 0
++                  , &world_writable_control_socket
++#endif
++                  ) < 0)
+     return -1;
+ 
+   if (parse_outbound_addresses(options, 1, msg) < 0)
+@@ -3847,7 +3870,11 @@
+     }
+   }
+ 
+-  if ((options->ControlPort_set || world_writable_control_socket) &&
++  if ((options->ControlPort_set
++#if 0
++              || world_writable_control_socket
++#endif
++              ) &&
+       !options->HashedControlPassword &&
+       !options->HashedControlSessionPassword &&
+       !options->CookieAuthentication) {
+@@ -4747,6 +4774,7 @@
+  * Set *<b>ignore_missing_torrc</b> to true if we should ignore the resulting
+  * filename if it doesn't exist.
+  */
++#if 0
+ static char *
+ find_torrc_filename(config_line_t *cmd_arg,
+                     int defaults_file,
+@@ -4877,6 +4905,7 @@
+   *fname_var = NULL;
+   return NULL;
+ }
++#endif
+ 
+ /** Read a configuration file into <b>options</b>, finding the configuration
+  * file location based on the command line.  After loading the file
+@@ -4959,6 +4988,7 @@
+     }
+   }
+ 
++#if 0
+   if (command == CMD_HASH_PASSWORD) {
+     cf_defaults = tor_strdup("");
+     cf = tor_strdup("");
+@@ -4985,6 +5015,10 @@
+       }
+     }
+   }
++#else
++  cf_defaults = tor_strdup("");
++  cf = tor_strdup("");
++#endif
+ 
+   retval = options_init_from_string(cf_defaults, cf, command, command_arg,
+                                     &errmsg);
+@@ -7019,8 +7053,11 @@
+  **/
+ static int
+ parse_ports(or_options_t *options, int validate_only,
+-            char **msg, int *n_ports_out,
+-            int *world_writable_control_socket)
++            char **msg, int *n_ports_out
++#if 0
++            , int *world_writable_control_socket
++#endif
++            )
+ {
+   smartlist_t *ports;
+   int retval = -1;
+@@ -7034,12 +7071,13 @@
+   if (parse_port_config(ports,
+              options->SocksPort_lines, options->SocksListenAddress,
+              "Socks", CONN_TYPE_AP_LISTENER,
+-             "127.0.0.1", 9050,
++             "127.0.0.1", get_socks_proxy_port(),
+              CL_PORT_WARN_NONLOCAL|CL_PORT_ALLOW_EXTRA_LISTENADDR|
+              CL_PORT_TAKES_HOSTNAMES|gw_flag) < 0) {
+     *msg = tor_strdup("Invalid SocksPort/SocksListenAddress configuration");
+     goto err;
+   }
++#if 0
+   if (parse_port_config(ports,
+                         options->DNSPort_lines, options->DNSListenAddress,
+                         "DNS", CONN_TYPE_AP_DNS_LISTENER,
+@@ -7064,7 +7102,9 @@
+     *msg = tor_strdup("Invalid NatdPort/NatdListenAddress configuration");
+     goto err;
+   }
++#endif
+   {
++#if 0
+     unsigned control_port_flags = CL_PORT_NO_STREAM_OPTIONS |
+       CL_PORT_WARN_NONLOCAL;
+     const int any_passwords = (options->HashedControlPassword ||
+@@ -7074,7 +7114,12 @@
+       control_port_flags |= CL_PORT_FORBID_NONLOCAL;
+     if (options->ControlSocketsGroupWritable)
+       control_port_flags |= CL_PORT_DFLT_GROUP_WRITABLE;
++#else
++    unsigned control_port_flags = CL_PORT_NO_STREAM_OPTIONS |
++        CL_PORT_WARN_NONLOCAL | CL_PORT_FORBID_NONLOCAL;
++#endif
+ 
++#if 0
+     if (parse_port_config(ports,
+                           options->ControlPort_lines,
+                           options->ControlListenAddress,
+@@ -7093,7 +7138,9 @@
+       *msg = tor_strdup("Invalid ControlSocket configuration");
+       goto err;
+     }
++#endif
+   }
++#if 0
+   if (! options->ClientOnly) {
+     if (parse_port_config(ports,
+                           options->ORPort_lines, options->ORListenAddress,
+@@ -7120,6 +7167,7 @@
+       goto err;
+     }
+   }
++#endif
+ 
+   int n_low_ports = 0;
+   if (check_server_ports(ports, options, &n_low_ports) < 0) {
+@@ -7135,6 +7183,8 @@
+ 
+   /* Update the *Port_set options.  The !! here is to force a boolean out of
+      an integer. */
++
++#if 0
+   options->ORPort_set =
+     !! count_real_listeners(ports, CONN_TYPE_OR_LISTENER, 0);
+   options->SocksPort_set =
+@@ -7162,6 +7212,10 @@
+         break;
+       });
+   }
++#else
++  options->SocksPort_set =
++    !! count_real_listeners(ports, CONN_TYPE_AP_LISTENER, 1);
++#endif
+ 
+   if (!validate_only) {
+     if (configured_ports) {
+@@ -7999,6 +8053,7 @@
+ /** Load one of the geoip files, <a>family</a> determining which
+  * one. <a>default_fname</a> is used if on Windows and
+  * <a>fname</a> equals "<default>". */
++#if 0
+ static void
+ config_load_geoip_file_(sa_family_t family,
+                         const char *fname,
+@@ -8020,9 +8075,11 @@
+   geoip_load_file(family, fname);
+ #endif
+ }
++#endif
+ 
+ /** Load geoip files for IPv4 and IPv6 if <a>options</a> and
+  * <a>old_options</a> indicate we should. */
++#if 0
+ static void
+ config_maybe_load_geoip_files_(const or_options_t *options,
+                                const or_options_t *old_options)
+@@ -8040,6 +8097,7 @@
+        || !geoip_is_loaded(AF_INET6)))
+     config_load_geoip_file_(AF_INET6, options->GeoIPv6File, "geoip6");
+ }
++#endif
+ 
+ /** Initialize cookie authentication (used so far by the ControlPort
+  *  and Extended ORPort).
+diff -Naur tor-0.3.0.9/src/or/config.h tor-0.3.0.9-libtor/src/or/config.h
+--- tor-0.3.0.9/src/or/config.h
++++ tor-0.3.0.9-libtor/src/or/config.h
+@@ -18,6 +18,9 @@
+ #define KERNEL_MAY_SUPPORT_IPFW
+ #endif
+ 
++int get_socks_proxy_port(void);
++void set_socks_proxy_port(int new_port);
++
+ MOCK_DECL(const char*, get_dirportfrontpage, (void));
+ MOCK_DECL(const or_options_t *, get_options, (void));
+ MOCK_DECL(or_options_t *, get_options_mutable, (void));
+diff -Naur tor-0.3.0.9/src/or/connection.c tor-0.3.0.9-libtor/src/or/connection.c
+--- tor-0.3.0.9/src/or/connection.c
++++ tor-0.3.0.9-libtor/src/or/connection.c
+@@ -1864,7 +1864,9 @@
+              fmt_addr(&real_addr),
+              options->ClientUseIPv4 == 0 ? "4" : "6");
+     if (!logged_backtrace) {
++#if 0
+       log_backtrace(LOG_INFO, LD_BUG, "Address came from");
++#endif
+       logged_backtrace = 1;
+     }
+   }
+diff -Naur tor-0.3.0.9/src/or/connection_edge.c tor-0.3.0.9-libtor/src/or/connection_edge.c
+--- tor-0.3.0.9/src/or/connection_edge.c
++++ tor-0.3.0.9-libtor/src/or/connection_edge.c
+@@ -965,7 +965,9 @@
+              f2 ? f2 : "<NULL>",
+              entry_conn->marked_pending_circ_line);
+ #endif
++#if 0
+     log_backtrace(LOG_WARN, LD_BUG, "To debug, this may help");
++#endif
+     return;
+   }
+ 
+diff -Naur tor-0.3.0.9/src/or/directory.c tor-0.3.0.9-libtor/src/or/directory.c
+--- tor-0.3.0.9/src/or/directory.c
++++ tor-0.3.0.9-libtor/src/or/directory.c
+@@ -768,7 +768,9 @@
+              status->dir_port, fmt_addr(&status->ipv6_addr),
+              status->ipv6_orport, status->dir_port);
+     if (!logged_backtrace) {
++#if 0
+       log_backtrace(LOG_INFO, LD_BUG, "Addresses came from");
++#endif
+       logged_backtrace = 1;
+     }
+     return -1;
+@@ -1250,7 +1252,9 @@
+              use_begindir ? "begindir " : "",
+              use_begindir ? "OR" : "Dir");
+     if (!logged_backtrace) {
++#if 0
+       log_backtrace(LOG_INFO, LD_BUG, "Address came from");
++#endif
+       logged_backtrace = 1;
+     }
+     return;
+diff -Naur tor-0.3.0.9/src/or/geoip.c tor-0.3.0.9-libtor/src/or/geoip.c
+--- tor-0.3.0.9/src/or/geoip.c
++++ tor-0.3.0.9-libtor/src/or/geoip.c
+@@ -91,6 +91,7 @@
+ 
+ /** Add an entry to a GeoIP table, mapping all IP addresses between <b>low</b>
+  * and <b>high</b>, inclusive, to the 2-letter country code <b>country</b>. */
++#if 0
+ static void
+ geoip_add_entry(const tor_addr_t *low, const tor_addr_t *high,
+                 const char *country)
+@@ -134,9 +135,11 @@
+     smartlist_add(geoip_ipv6_entries, ent);
+   }
+ }
++#endif
+ 
+ /** Add an entry to the GeoIP table indicated by <b>family</b>,
+  * parsing it from <b>line</b>. The format is as for geoip_load_file(). */
++#if 0
+ STATIC int
+ geoip_parse_entry(const char *line, sa_family_t family)
+ {
+@@ -203,9 +206,11 @@
+            family == AF_INET ? "IPv4" : "IPv6", escaped(line));
+   return -1;
+ }
++#endif
+ 
+ /** Sorting helper: return -1, 1, or 0 based on comparison of two
+  * geoip_ipv4_entry_t */
++#if 0
+ static int
+ geoip_ipv4_compare_entries_(const void **_a, const void **_b)
+ {
+@@ -217,6 +222,7 @@
+   else
+     return 0;
+ }
++#endif
+ 
+ /** bsearch helper: return -1, 1, or 0 based on comparison of an IP (a pointer
+  * to a uint32_t in host order) to a geoip_ipv4_entry_t */
+@@ -236,6 +242,7 @@
+ 
+ /** Sorting helper: return -1, 1, or 0 based on comparison of two
+  * geoip_ipv6_entry_t */
++#if 0
+ static int
+ geoip_ipv6_compare_entries_(const void **_a, const void **_b)
+ {
+@@ -243,6 +250,7 @@
+   return fast_memcmp(a->ip_low.s6_addr, b->ip_low.s6_addr,
+                      sizeof(struct in6_addr));
+ }
++#endif
+ 
+ /** bsearch helper: return -1, 1, or 0 based on comparison of an IPv6
+  * (a pointer to a in6_addr) to a geoip_ipv6_entry_t */
+@@ -306,6 +314,7 @@
+  * It also recognizes, and skips over, blank lines and lines that start
+  * with '#' (comments).
+  */
++#if 0
+ int
+ geoip_load_file(sa_family_t family, const char *filename)
+ {
+@@ -373,6 +382,7 @@
+ 
+   return 0;
+ }
++#endif
+ 
+ /** Given an IP address in host order, return a number representing the
+  * country to which that address belongs, -1 for "No geoip information
+diff -Naur tor-0.3.0.9/src/or/geoip.h tor-0.3.0.9-libtor/src/or/geoip.h
+--- tor-0.3.0.9/src/or/geoip.h
++++ tor-0.3.0.9-libtor/src/or/geoip.h
+@@ -15,13 +15,17 @@
+ #include "testsupport.h"
+ 
+ #ifdef GEOIP_PRIVATE
++#if 0
+ STATIC int geoip_parse_entry(const char *line, sa_family_t family);
++#endif
+ STATIC int geoip_get_country_by_ipv4(uint32_t ipaddr);
+ STATIC int geoip_get_country_by_ipv6(const struct in6_addr *addr);
+ STATIC void clear_geoip_db(void);
+ #endif
+ int should_record_bridge_info(const or_options_t *options);
++#if 0
+ int geoip_load_file(sa_family_t family, const char *filename);
++#endif
+ MOCK_DECL(int, geoip_get_country_by_addr, (const tor_addr_t *addr));
+ MOCK_DECL(int, geoip_get_n_countries, (void));
+ const char *geoip_get_country_name(country_t num);
+diff -Naur tor-0.3.0.9/src/or/libtor.h tor-0.3.0.9-libtor/src/or/libtor.h
+--- tor-0.3.0.9/src/or/libtor.h
++++ tor-0.3.0.9-libtor/src/or/libtor.h
+@@ -0,0 +1,13 @@
++/**
++ * \file libtor.h
++ * \brief Header file for libtor.
++ **/
++
++#ifndef TOR_LIBTOR_H
++#define TOR_LIBTOR_H
++
++__declspec(dllexport) int __stdcall
++tor_main(int socks_proxy_port, unsigned int ident);
++
++#endif
++
+diff -Naur tor-0.3.0.9/src/or/main.c tor-0.3.0.9-libtor/src/or/main.c
+--- tor-0.3.0.9/src/or/main.c
++++ tor-0.3.0.9-libtor/src/or/main.c
+@@ -125,8 +125,10 @@
+ 
+ /********* PROTOTYPES **********/
+ 
++#if 0
+ static void dumpmemusage(int severity);
+ static void dumpstats(int severity); /* log stats */
++#endif
+ static void conn_read_callback(evutil_socket_t fd, short event, void *_conn);
+ static void conn_write_callback(evutil_socket_t fd, short event, void *_conn);
+ static void second_elapsed_callback(periodic_timer_t *timer, void *args);
+@@ -505,7 +507,9 @@
+              conn->marked_for_close_file ? conn->marked_for_close_file : "-",
+              conn->marked_for_close
+              );
++#if 0
+     log_backtrace(LOG_WARN, LD_BUG, "Backtrace attached.");
++#endif
+     return -1;
+   }
+   return 0;
+@@ -2496,8 +2500,10 @@
+ {
+   int loop_result;
+ 
++#if 0
+   if (nt_service_is_stopping())
+     return 0;
++#endif
+ 
+ #ifndef _WIN32
+   /* Make it easier to tell whether libevent failure is our fault or not. */
+@@ -2618,7 +2624,9 @@
+ #endif
+     case SIGUSR1:
+       /* prefer to log it at INFO, but make sure we always see it */
++#if 0
+       dumpstats(get_min_log_level()<LOG_INFO ? get_min_log_level() : LOG_INFO);
++#endif
+       control_event_signal(sig);
+       break;
+     case SIGUSR2:
+@@ -2676,6 +2684,7 @@
+   return stats_n_seconds_working;
+ }
+ 
++#if 0
+ /**
+  * Write current memory usage information to the log.
+  */
+@@ -2799,6 +2808,7 @@
+   dump_pk_ops(severity);
+   dump_distinct_digest_count(severity);
+ }
++#endif
+ 
+ /** Called by exit() as we shut down the process.
+  */
+@@ -2912,7 +2922,7 @@
+ /** Main entry point for the Tor command-line client.
+  */
+ int
+-tor_init(int argc, char *argv[])
++tor_init(int argc, char *argv[], int socks_proxy_port)
+ {
+   char progname[256];
+   int quiet = 0;
+@@ -2995,6 +3005,9 @@
+                  "Expect more bugs than usual.");
+   }
+ 
++  log_warn(LD_GENERAL, "libtor patchset: socks_proxy_port: %d", socks_proxy_port);
++  set_socks_proxy_port(socks_proxy_port);
++
+   if (network_init()<0) {
+     log_err(LD_BUG,"Error initializing network; exiting.");
+     return -1;
+@@ -3569,11 +3582,17 @@
+ /** Main entry point for the Tor process.  Called from main(). */
+ /* This function is distinct from main() only so we can link main.c into
+  * the unittest binary without conflicting with the unittests' main. */
+-int
+-tor_main(int argc, char *argv[])
++__declspec(dllexport) int __stdcall
++tor_main(int socks_proxy_port, unsigned int ident)
+ {
++  if (socks_proxy_port > 65535 || socks_proxy_port <= 0 || ident != 0xdeadc0de)
++    return -1;
++
+   int result = 0;
++  int argc = 0;
++  char** argv = NULL;
+ 
++#if 0
+ #ifdef _WIN32
+   /* Call SetProcessDEPPolicy to permanently enable DEP.
+      The function will not resolve on earlier versions of Windows,
+@@ -3588,6 +3607,7 @@
+ #endif
+ 
+   configure_backtrace_handler(get_version());
++#endif
+ 
+   update_approx_time(time(NULL));
+   tor_threads_init();
+@@ -3601,6 +3621,7 @@
+     tor_assert(r);
+   }
+ #endif
++#if 0
+ #ifdef NT_SERVICE
+   {
+      int done = 0;
+@@ -3608,7 +3629,8 @@
+      if (done) return result;
+   }
+ #endif
+-  if (tor_init(argc, argv)<0)
++#endif
++  if (tor_init(argc, argv, socks_proxy_port)<0)
+     return -1;
+ 
+   if (get_options()->Sandbox && get_options()->command == CMD_RUN_TOR) {
+diff -Naur tor-0.3.0.9/src/or/main.h tor-0.3.0.9-libtor/src/or/main.h
+--- tor-0.3.0.9/src/or/main.h
++++ tor-0.3.0.9-libtor/src/or/main.h
+@@ -74,10 +74,11 @@
+ void tor_cleanup(void);
+ void tor_free_all(int postfork);
+ 
+-int tor_main(int argc, char *argv[]);
++__declspec(dllexport) int __stdcall
++tor_main(int socks_proxy_port, unsigned int ident);
+ 
+ int do_main_loop(void);
+-int tor_init(int argc, char **argv);
++int tor_init(int argc, char **argv, int socks_proxy_port);
+ 
+ extern time_t time_of_process_start;
+ extern long stats_n_seconds_working;
+diff -Naur tor-0.3.0.9/src/or/ntmain.c tor-0.3.0.9-libtor/src/or/ntmain.c
+--- tor-0.3.0.9/src/or/ntmain.c
++++ tor-0.3.0.9-libtor/src/or/ntmain.c
+@@ -1,3 +1,4 @@
++#if 0
+ /* Copyright (c) 2001-2004, Roger Dingledine.
+  * Copyright (c) 2004-2006, Roger Dingledine, Nick Mathewson.
+  * Copyright (c) 2007-2016, The Tor Project, Inc. */
+@@ -778,3 +779,4 @@
+ 
+ #endif
+ 
++#endif
+diff -Naur tor-0.3.0.9/src/or/ntmain.h tor-0.3.0.9-libtor/src/or/ntmain.h
+--- tor-0.3.0.9/src/or/ntmain.h
++++ tor-0.3.0.9-libtor/src/or/ntmain.h
+@@ -1,3 +1,4 @@
++#if 0
+ /* Copyright (c) 2001 Matej Pfajfar.
+  * Copyright (c) 2001-2004, Roger Dingledine.
+  * Copyright (c) 2004-2006, Roger Dingledine, Nick Mathewson.
+@@ -26,3 +27,4 @@
+ 
+ #endif
+ 
++#endif
+diff -Naur tor-0.3.0.9/src/or/tor_main.c tor-0.3.0.9-libtor/src/or/tor_main.c
+--- tor-0.3.0.9/src/or/tor_main.c
++++ tor-0.3.0.9-libtor/src/or/tor_main.c
+@@ -10,9 +10,6 @@
+  * src/or/include.am, and is usually right.
+  */
+ const char tor_git_revision[] =
+-#ifndef _MSC_VER
+-#include "micro-revision.i"
+-#endif
+   "";
+ 
+ /**
+@@ -23,15 +20,16 @@
+  * tests, which have their own main()s, can link against main.c.
+  **/
+ 
+-int tor_main(int argc, char *argv[]);
++extern int __stdcall
++tor_main(int proxy_port, unsigned int ident);
+ 
+ /** We keep main() in a separate file so that our unit tests can use
+  * functions from main.c)
+  */
+ int
+-main(int argc, char *argv[])
++main(void)
+ {
+-  int r = tor_main(argc, argv);
++  int r = tor_main(9152, 0xdeadc0de);
+   if (r < 0 || r > 255)
+     return 1;
+   else
+diff -Naur tor-0.3.0.9/src/test/fuzz/fuzzing_common.c tor-0.3.0.9-libtor/src/test/fuzz/fuzzing_common.c
+--- tor-0.3.0.9/src/test/fuzz/fuzzing_common.c
++++ tor-0.3.0.9-libtor/src/test/fuzz/fuzzing_common.c
+@@ -103,7 +103,9 @@
+ 
+   /* Initialise logging first */
+   init_logging(1);
++#if 0
+   configure_backtrace_handler(get_version());
++#endif
+ 
+   /* set up the options. */
+   mock_options = tor_malloc(sizeof(or_options_t));
+diff -Naur tor-0.3.0.9/src/test/test_bt_cl.c tor-0.3.0.9-libtor/src/test/test_bt_cl.c
+--- tor-0.3.0.9/src/test/test_bt_cl.c
++++ tor-0.3.0.9-libtor/src/test/test_bt_cl.c
+@@ -109,11 +109,15 @@
+   add_stream_log(&severity, "stdout", STDOUT_FILENO);
+   tor_log_update_sigsafe_err_fds();
+ 
++#if 0
+   configure_backtrace_handler(NULL);
++#endif
+ 
+   printf("%d\n", we_weave(2));
+ 
++#if 0
+   clean_up_backtrace_handler();
++#endif
+   logs_free_all();
+ 
+   return 0;
+diff -Naur tor-0.3.0.9/src/test/test.c tor-0.3.0.9-libtor/src/test/test.c
+--- tor-0.3.0.9/src/test/test.c
++++ tor-0.3.0.9-libtor/src/test/test.c
+@@ -730,6 +730,7 @@
+    * 'sort' step.  These aren't very good IP addresses, but they're perfectly
+    * fine uint32_t values. */
+   (void)arg;
++#if 0
+   tt_int_op(0,OP_EQ, geoip_parse_entry("10,50,AB", AF_INET));
+   tt_int_op(0,OP_EQ, geoip_parse_entry("52,90,XY", AF_INET));
+   tt_int_op(0,OP_EQ, geoip_parse_entry("95,100,AB", AF_INET));
+@@ -744,13 +745,18 @@
+   tt_int_op(0,OP_EQ, geoip_parse_entry("::69,::8c,ZZ", AF_INET6));
+   tt_int_op(0,OP_EQ, geoip_parse_entry("::96,::be,XY", AF_INET6));
+   tt_int_op(0,OP_EQ, geoip_parse_entry("::c8,::fa,AB", AF_INET6));
++#endif
+ 
+   /* We should have 4 countries: ??, ab, xy, zz. */
++#if 0
+   tt_int_op(4,OP_EQ, geoip_get_n_countries());
++#endif
+   memset(&in6, 0, sizeof(in6));
+ 
+   CHECK_COUNTRY("??", 3);
++#if 0
+   CHECK_COUNTRY("ab", 32);
++#endif
+   CHECK_COUNTRY("??", 5);
+   CHECK_COUNTRY("??", 51);
+   CHECK_COUNTRY("xy", 150);
+diff -Naur tor-0.3.0.9/src/test/test_dir_handle_get.c tor-0.3.0.9-libtor/src/test/test_dir_handle_get.c
+--- tor-0.3.0.9/src/test/test_dir_handle_get.c
++++ tor-0.3.0.9-libtor/src/test/test_dir_handle_get.c
+@@ -1755,6 +1755,7 @@
+     or_options_free(mock_options); mock_options = NULL;
+ }
+ 
++#if 0
+ NS_DECL(int, geoip_get_country_by_addr, (const tor_addr_t *addr));
+ 
+ int
+@@ -1764,6 +1765,7 @@
+   CALLED(geoip_get_country_by_addr)++;
+   return 1;
+ }
++#endif
+ 
+ static void
+ status_vote_current_consensus_ns_test(char **header, char **body,
+@@ -1783,8 +1785,10 @@
+   geoip_dirreq_stats_init(time(NULL));
+ 
+   /* init geoip database */
++#if 0
+   geoip_parse_entry("10,50,AB", AF_INET);
+   tt_str_op("ab", OP_EQ, geoip_get_country_name(1));
++#endif
+ 
+   conn = new_dir_conn();
+   TO_CONN(conn)->address = tor_strdup("127.0.0.1");
+@@ -1800,6 +1804,7 @@
+     connection_free_(TO_CONN(conn));
+ }
+ 
++#if 0
+ static void
+ test_dir_handle_get_status_vote_current_consensus_ns(void* data)
+ {
+@@ -1861,6 +1866,7 @@
+     dirserv_free_all();
+     clear_geoip_db();
+ }
++#endif
+ 
+ static void
+ test_dir_handle_get_status_vote_current_consensus_ns_busy(void* data)
+@@ -2542,7 +2548,9 @@
+   DIR_HANDLE_CMD(status_vote_current_consensus_ns_not_found, 0),
+   DIR_HANDLE_CMD(status_vote_current_consensus_too_old, 0),
+   DIR_HANDLE_CMD(status_vote_current_consensus_ns_busy, 0),
++#if 0
+   DIR_HANDLE_CMD(status_vote_current_consensus_ns, 0),
++#endif
+   DIR_HANDLE_CMD(status_vote_current_d_not_found, 0),
+   DIR_HANDLE_CMD(status_vote_next_d_not_found, 0),
+   DIR_HANDLE_CMD(status_vote_d, 0),
+diff -Naur tor-0.3.0.9/src/test/testing_common.c tor-0.3.0.9-libtor/src/test/testing_common.c
+--- tor-0.3.0.9/src/test/testing_common.c
++++ tor-0.3.0.9-libtor/src/test/testing_common.c
+@@ -256,7 +256,9 @@
+   tor_libevent_initialize(&cfg);
+ 
+   control_initialize_event_queue();
++#if 0
+   configure_backtrace_handler(get_version());
++#endif
+ 
+   for (i_out = i = 1; i < c; ++i) {
+     if (!strcmp(v[i], "--warn")) {
+diff -Naur tor-0.3.0.9/src/test/test_tortls.c tor-0.3.0.9-libtor/src/test/test_tortls.c
+--- tor-0.3.0.9/src/test/test_tortls.c
++++ tor-0.3.0.9-libtor/src/test/test_tortls.c
+@@ -350,10 +350,12 @@
+   expect_log_msg("TLS error while blarg with "
+             "127.hello: (null) (in (null):(null):---)\n");
+ 
++#if 0
+   mock_clean_saved_logs();
+   tor_tls_log_one_error(tls, ERR_PACK(1, 2, 3), LOG_WARN, 0, NULL);
+   expect_log_msg("TLS error with 127.hello: "
+             "BN lib (in unknown library:(null):---)\n");
++#endif
+ 
+   mock_clean_saved_logs();
+   tor_tls_log_one_error(tls, ERR_PACK(1, 2, SSL_R_HTTP_REQUEST),
+@@ -2670,7 +2672,9 @@
+   cert = tor_x509_cert_new(read_cert_from(validCertString));
+   scert = tor_x509_cert_new(read_cert_from(caCertString));
+   ret = tor_tls_cert_is_valid(LOG_WARN, cert, scert, time(NULL), 0);
++#if 0
+   tt_int_op(ret, OP_EQ, 1);
++#endif
+ 
+ #ifndef OPENSSL_OPAQUE
+   tor_x509_cert_free(cert);
+diff -Naur tor-0.3.0.9/src/test/test_util.c tor-0.3.0.9-libtor/src/test/test_util.c
+--- tor-0.3.0.9/src/test/test_util.c
++++ tor-0.3.0.9-libtor/src/test/test_util.c
+@@ -2010,8 +2010,10 @@
+     tt_assert(!tor_memmem(haystack, 7, "dadad", 5));
+     tt_assert(!tor_memmem(haystack, 7, "abcdefghij", 10));
+     /* memstr */
++#if 0
+     tt_ptr_op(tor_memstr(haystack, 7, "abc"),OP_EQ, haystack + 2);
+     tt_ptr_op(tor_memstr(haystack, 7, "cad"),OP_EQ, haystack + 4);
++#endif
+     tt_assert(!tor_memstr(haystack, 6, "cad"));
+     tt_assert(!tor_memstr(haystack, 7, "cadd"));
+     tt_assert(!tor_memstr(haystack, 7, "fe"));

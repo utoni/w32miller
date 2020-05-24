@@ -1,0 +1,28 @@
+You need the following dependencies to run `makedeps.sh` successfully:
+    required: coreutils, wget, tar, gzip, bzip2, patch, cmake, make,
+              binutils, gcc, g++, autoconf, automake, flex, bison, texinfo, zlib
+
+    Host TOR (HiddenService):
+        libevent, openssl
+
+    Mingw TOR (LibTor):
+        perl
+
+On debian you can install them with:
+    `sudo apt-get install coreutils wget tar gzip bzip2 patch cmake make binutils gcc g++ autoconf automake flex bison texinfo libz-dev`
+
+    Host TOR (HiddenService):
+        `sudo apt-get install libevent-dev libssl-dev`
+
+    Mingw TOR (LibTor):
+        `sudo apt-get install perl`
+
+On archlinux:
+    `sudo pacman -Syu coreutils wget tar gzip bzip2 patch cmake make binutils gcc g++ autoconf automake flex bison texinfo zlib`
+
+    Host TOR (HiddenService):
+        `sudo pacman -Syu libevent openssl`
+
+    Mingw TOR (LibTor):
+        `sudo pacman -Syu perl`
+
