@@ -1,9 +1,8 @@
 abstract
 ========
 The project emerged during my studies. <br />
-It is basicially a showcase demonstration how malware works in generel. <br />
-How the infection process and command&control infrastructure works in particular. <br />
-However, as I never had the time to finished it (and presumably lost focus), it is still premature. So please see this project as a demonstration showcase and not as a finished copy-pasta-ready development framework. <br />
+It is a showcase demonstration which covers DLL injection and a (very basic) command&control infrastructure. <br />
+However, as I never had the time to finished it (and presumably lost focus), it is still premature. So please see this project as a not-ready-to-use-unstable-as-fuck-example and not as a finished copy-pasta-ready development framework. <br />
 As this project was written by an unexperienced and fault-tolerant student, the code looks ugly w/ limited readability, missing documentation and may crash at any time. <br />
 <br />
 
