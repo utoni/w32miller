@@ -82,9 +82,9 @@ set(BUILD_ALL_TOOLS OFF CACHE BOOL "build decrypter/disasm/loader_decrypt test e
 set(BUILD_CNCMASTER OFF CACHE BOOL "build the command and control center: master instance")
 set(BUILD_CNCPROXY OFF CACHE BOOL "build the command and control center: forwarding proxy instance")
 set(ENABLE_IRC OFF CACHE BOOL "enable IRC support (deprecated/obsolete)")
-set(HTTP_LOCALHOST OFF CACHE BOOL "client uses localhost as connect back adr instead of web2tor gateways")
-set(INFECT_DUMMY OFF CACHE BOOL "malware will ONLY infect dummy.exe in the current working dir")
-set(EXTRA_VERBOSE OFF CACHE BOOL "print additional debugging information (_PRE_RELEASE only!)")
+set(HTTP_LOCALHOST ON CACHE BOOL "client uses localhost as connect back adr instead of web2tor gateways")
+set(INFECT_DUMMY ON CACHE BOOL "malware will ONLY infect dummy.exe in the current working dir")
+set(EXTRA_VERBOSE ON CACHE BOOL "print additional debugging information (_PRE_RELEASE only!)")
 
 unset(tmp)
 GetMillerSectionFromInclude("${MILLER_HDRDIR}/xor_strings.h" "LDRSECTION" tmp)
