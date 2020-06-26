@@ -59,10 +59,11 @@ BOLD=$(tput bold)
 NC=$(tput sgr0)
 cd "$(dirname $0)"
 
-export PYTHON=Python-2.7.18
+export MILLER_PYTHON=Python-2.7.18
 export MINGW=mingw-w64-v6.0.0
+export ISL=isl-0.20
 export BIN=binutils-2.31.1
-export GCC=gcc-8.2.0
+export GCC=gcc-8.4.0
 export GMP=gmp-6.1.2
 export MPF=mpfr-4.0.1
 export MPC=mpc-1.1.0
@@ -173,7 +174,7 @@ if [ ! -d "${MY_SYS_ROOT}" ]; then
 	rm -rf ${BUILDDIRS} ${PY_BUILD_STAMP}
 fi
 
-dl_and_extract_gz "${PYTHON}" "https://www.python.org/ftp/python/2.7.18/${PYTHON}.tgz"
+dl_and_extract_gz "${MILLER_PYTHON}" "https://www.python.org/ftp/python/2.7.18/${MILLER_PYTHON}.tgz"
 
 #libtor is disabled until patch the was ported
 #dl_and_extract "${TOR}" "https://www.torproject.org/dist/${TOR}.tar.gz"
@@ -184,6 +185,7 @@ dl_and_extract_gz "${PYTHON}" "https://www.python.org/ftp/python/2.7.18/${PYTHON
 #fi
 
 dl_and_extract_bz "${MINGW}" "https://vorboss.dl.sourceforge.net/project/mingw-w64/mingw-w64/mingw-w64-release/${MINGW}.tar.bz2"
+dl_and_extract_gz "${ISL}" "http://isl.gforge.inria.fr/${ISL}.tar.gz"
 dl_and_extract_gz "${BIN}" "https://ftp.gnu.org/gnu/binutils/${BIN}.tar.gz"
 dl_and_extract_gz "${GCC}" "https://ftp.gnu.org/gnu/gcc/${GCC}/${GCC}.tar.gz"
 dl_and_extract_gz "${MUSL}" "https://www.musl-libc.org/releases/${MUSL}.tar.gz"
@@ -193,6 +195,10 @@ dl_and_extract_gz "${OPENSSL}" "https://www.openssl.org/source/${OPENSSL}.tar.gz
 dl_and_extract_gz "${ZLIB}" "https://zlib.net/${ZLIB}.tar.gz"
 dl_and_extract_gz "${LIBEVENT}" "https://github.com/libevent/libevent/releases/download/release-2.1.8-stable/${LIBEVENT}.tar.gz"
 
+if [ ! -d "${GCC}/isl" ]; then
+    dbg_run mv -fv "${ISL}" "${GCC}/isl"
+fi
+
 test -f "${GMP}.tar.bz2" || { dbg_run wget "https://gmplib.org/download/gmp/${GMP}.tar.bz2" -O".tmp.${GMP}.tar.bz2" && dbg_run mv ".tmp.${GMP}.tar.bz2" "${GMP}.tar.bz2" || false; }
 test -f "${MPF}.tar.bz2" || { dbg_run wget "http://www.mpfr.org/mpfr-4.0.1/${MPF}.tar.bz2" -O".tmp.${MPF}.tar.bz2" && dbg_run mv ".tmp.${MPF}.tar.bz2" "${MPF}.tar.bz2" || false; }
 test -f "${MPC}.tar.gz" || { dbg_run wget "ftp://ftp.gnu.org/gnu/mpc/${MPC}.tar.gz" -O".tmp.${MPC}.tar.gz" && dbg_run mv ".tmp.${MPC}.tar.gz" "${MPC}.tar.gz" || false; }
@@ -200,12 +206,12 @@ test -f "${MPC}.tar.gz" || { dbg_run wget "ftp://ftp.gnu.org/gnu/mpc/${MPC}.tar.
 if [ ! -d "${GCC}/gmp" ]; then
     dbg "extract gmp"
     dbg_run tar -xjf "${GMP}.tar.bz2"
-    dbg_run mv "${GMP}" "${GCC}/gmp"
+    dbg_run mv -fv "${GMP}" "${GCC}/gmp"
 fi
 if [ ! -d "${GCC}/mpfr" ]; then
     dbg "extract mpfr"
     dbg_run tar -xjf "${MPF}.tar.bz2"
-    dbg_run mv "${MPF}" "${GCC}/mpfr"
+    dbg_run mv -fv "${MPF}" "${GCC}/mpfr"
 fi
 if [ ! -d "${GCC}/mpc" ]; then
     dbg "extract mpc"
@@ -272,10 +278,10 @@ DBG_NOERR=1 dbg_run ln -sr "${MY_SYS_ROOT}/bin/strip" "${MY_SYS_ROOT}/lib/gcc/$(
 if [ ! -r ${PY_BUILD_STAMP} ]; then
     dbg "MAKE PYTHON"
     cd build_python
-    test -f Makefile || dbg_run ../${PYTHON}/configure --prefix=${MY_SYS_ROOT} --enable-optimizations --disable-shared
+    test -f Makefile || dbg_run ../${MILLER_PYTHON}/configure --prefix=${MY_SYS_ROOT} --enable-optimizations --disable-shared
     dbg_run make -j${NMB_BUILDJOBS}
     dbg_run make install
-    dbg_run ln -sr ${MY_SYS_ROOT}/bin/python2.7 ${MY_SYS_ROOT}/bin/${PYTHON} || true
+    dbg_run ln -sr ${MY_SYS_ROOT}/bin/python2.7 ${MY_SYS_ROOT}/bin/${MILLER_PYTHON} || true
     dbg_run ${STRIP} -s "${MY_SYS_ROOT}/bin/python2.7"
     cd ..
     dbg_run touch ${PY_BUILD_STAMP} # build python only once (takes lots of time with --enable-optimizations + tests)
