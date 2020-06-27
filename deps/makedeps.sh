@@ -62,7 +62,7 @@ cd "$(dirname $0)"
 export MILLER_PYTHON=Python-2.7.18
 export MINGW=mingw-w64-v6.0.0
 export ISL=isl-0.20
-export BIN=binutils-2.31.1
+export BIN=binutils-2.33.1
 export GCC=gcc-8.4.0
 export GMP=gmp-6.1.2
 export MPF=mpfr-4.0.1
