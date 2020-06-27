@@ -23,9 +23,6 @@ makedeps:
   stage: deps
   only:
     - master
-  tags:
-    - docker
-    - multi-runner
 
 makedeps-again:
   script:
@@ -44,9 +41,6 @@ makedeps-again:
     - master
   when: manual
   allow_failure: true
-  tags:
-    - docker
-    - multi-runner
 
 build:
   script:
@@ -63,9 +57,6 @@ build:
     - master
   dependencies:
     - makedeps
-  tags:
-    - docker
-    - multi-runner
 
 build-debug:
   script:
@@ -82,9 +73,6 @@ build-debug:
     - master
   dependencies:
     - makedeps
-  tags:
-    - docker
-    - multi-runner
 
 build-release:
   script:
@@ -101,9 +89,6 @@ build-release:
     - master
   dependencies:
     - makedeps
-  tags:
-    - docker
-    - multi-runner
 
 tests-debug:
   cache: {}
@@ -128,9 +113,6 @@ tests-debug:
     - master
   dependencies:
     - build-debug
-  tags:
-    - docker
-    - multi-runner
 
 tests-release:
   cache: {}
@@ -148,9 +130,6 @@ tests-release:
     - master
   dependencies:
     - build-release
-  tags:
-    - docker
-    - multi-runner
 
 tests-host-tools:
   script:
@@ -164,9 +143,6 @@ tests-host-tools:
     - master
   dependencies:
     - build-release
-  tags:
-    - docker
-    - multi-runner
 
 tests-release-mdk:
   script:
@@ -189,9 +165,6 @@ tests-release-mdk:
     - master
   dependencies:
     - build-release
-  tags:
-    - docker
-    - multi-runner
 
 tests-debug-mdk:
   script:
@@ -213,9 +186,6 @@ tests-debug-mdk:
     - master
   dependencies:
     - build-debug
-  tags:
-    - docker
-    - multi-runner
 
 sast:
   stage: test-wine
