@@ -83,3 +83,17 @@ function(CompileCSource source result cflags defs incl libs quiet)
   CHECK_C_SOURCE_COMPILES("${source}" ${result})
 endfunction()
 
+function(CloneGitSubmodule path)
+  find_package(Git QUIET)
+  option(GIT_SUBMODULE "Clone git submodules during build" ON)
+  if(GIT_SUBMODULE)
+    message(STATUS "Git Submodule update: ${GIT_EXECUTABLE} submodule update --init --recursive -- ${path}")
+    execute_process(COMMAND ${GIT_EXECUTABLE} submodule update --init --recursive -- "${path}"
+                    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+                    RESULT_VARIABLE GIT_SUBMOD_RESULT
+                    ERROR_QUIET OUTPUT_QUIET)
+    if(NOT GIT_SUBMOD_RESULT EQUAL "0")
+      message(FATAL_ERROR "Git Submodule update failed with ${GIT_SUBMOD_RESULT}.")
+    endif()
+  endif()
+endfunction()

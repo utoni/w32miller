@@ -84,6 +84,14 @@ add_custom_target(strings
   DEPENDS ${HOST_TOOLS_MKSTAMP} ${STRINGS_EXEC}
 )
 
+if (BUILD_CNCMASTER)
+  CloneGitSubmodule(source/tools/host/go/cncmaster/deps/src/github.com/gorilla/mux)
+endif()
+if (BUILD_CNCPROXY)
+  CloneGitSubmodule(source/tools/host/go/cncproxy/deps/src/github.com/gorilla/mux)
+  CloneGitSubmodule(source/tools/host/go/cncproxy/deps/src/github.com/zhuangsirui/binpacker)
+endif()
+
 if (BUILD_CNCPROXY)
 add_custom_target(
   cncproxy
