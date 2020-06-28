@@ -750,6 +750,11 @@ UINT WINAPI _GetSystemDirectory(LPTSTR lpBuffer, UINT uSize)
     return RUN_FUNC(INFO_GETSYSDIR_ENUM, GetSystemDirectoryFunc, lpBuffer, uSize);
 }
 
+UINT WINAPI _GetSystemWow64Directory(LPTSTR lpBuffer, UINT uSize)
+{
+    return RUN_FUNC(INFO_GETSYSWOW64DIR_ENUM, GetSystemDirectoryFunc, lpBuffer, uSize);
+}
+
 DWORD WINAPI _GetCurrentDirectory(DWORD nBufferLength, LPTSTR lpBuffer)
 {
     return RUN_FUNC(INFO_GETCURDIR_ENUM, GetCurrentDirectoryFunc, nBufferLength, lpBuffer);

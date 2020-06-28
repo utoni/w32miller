@@ -156,6 +156,7 @@
 #define INFO_GETSYSTEMINFO   "GetSystemInfo"
 #define INFO_GETVOLINFO      "GetVolumeInformationA"
 #define INFO_GETSYSDIR       "GetSystemDirectoryA"
+#define INFO_GETSYSWOW64DIR  "GetSystemWow64DirectoryA"
 #define INFO_GETCURDIR       "GetCurrentDirectoryA"
 #define INFO_GETFILEATTRS    "GetFileAttributesA"
 /* ENDSECTION */

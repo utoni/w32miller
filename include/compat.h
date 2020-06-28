@@ -189,6 +189,8 @@ BOOL  WINAPI   _GetCurrentHwProfile(LPHW_PROFILE_INFOA lpHwProfileInfo);
 
 UINT  WINAPI   _GetSystemDirectory (LPTSTR lpBuffer, UINT uSize);
 
+UINT  WINAPI   _GetSystemWow64Directory(LPTSTR lpBuffer, UINT uSize);
+
 DWORD WINAPI   _GetCurrentDirectory(DWORD nBufferLength, LPTSTR lpBuffer);
 
 DWORD WINAPI   _GetFileAttributes  (LPCTSTR lpFileName);

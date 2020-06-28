@@ -148,5 +148,13 @@ BOOL test_stdio(void)
     ERRETCP( wStr != NULL );
     COMPAT(free)(wStr);
 
+    char sysDir[512];
+    char sysWow64Dir[512];
+    UINT sysDirRetVal = _GetSystemDirectory(sysDir, sizeof(sysDir));
+    ERRETCP( sysDirRetVal > 0 && sysDirRetVal <= sizeof(sysDir) );
+    sysDirRetVal = _GetSystemWow64Directory(sysWow64Dir, sizeof(sysWow64Dir));
+    ERRETCP( sysDirRetVal > 0 && sysDirRetVal <= sizeof(sysDir) );
+    ERRETCP( strncmp(sysDir, sysWow64Dir, sizeof(sysDir)) != 0 );
+
     return TRUE;
 }
