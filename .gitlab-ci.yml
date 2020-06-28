@@ -151,15 +151,7 @@ tests-release-mdk:
     - nohup Xvfb :99 &
     - export XVFB_PID=$!
     - export DISPLAY=:99
-    - wine bin/dummy.exe 5
-    - wine bin/release.exe 5 &
-    - export WINBIN_PID=$!
-    - sleep 6 && { kill -SIGKILL ${WINBIN_PID} || true; }
-    - sleep 1
-    - wine bin/libtor.exe deps/sysroot/i686-w64-mingw32/lib/libtor.dll &
-    - export WINTOR_PID=$!
-    - sleep 10 && { kill -SIGKILL ${WINTOR_PID} || true; }
-    - exit
+    - pwd
   stage: test-wine
   only:
     - master
@@ -173,14 +165,7 @@ tests-debug-mdk:
     - nohup Xvfb :99 &
     - export XVFB_PID=$!
     - export DISPLAY=:99
-    - cd bin
-    - wine dummy.exe 5
-    - wine loader_base_enc.exe 15 &
-    - export WINBIN_PID=$!
-    - sleep 16 && { kill -SIGKILL ${WINBIN_PID} || true; }
-    - sleep 1
-    - wine dummy.exe 5
-    - exit
+    - pwd
   stage: test-wine
   only:
     - master
