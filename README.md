@@ -2,14 +2,14 @@ abstract
 ========
 The project emerged during my studies. <br />
 It is a showcase demonstration which covers DLL injection and a (very basic) command&control infrastructure. <br />
-However, as I never had the time to finished it (and presumably lost focus), it is still premature. So please see this project as a not-ready-to-use-unstable-as-fuck-example and not as a finished copy-pasta-ready development framework. <br />
+However, as I never had the time to finished it (and presumably lost focus), it is still premature. So please see this project as a unstable-as-fuck-example and not as a copy-pasta-ready development framework. <br />
 As this project was written by an unexperienced and fault-tolerant student, the code looks ugly w/ limited readability, missing documentation and may crash at any time. <br />
 <br />
 
 w32miller
 ========
 An educational malware development kit or my preferable abbreviation: **mdk**. <br />
-Only x86 architectures are supported at the moment. Most of the code is written in C, porting it to other architecture isn't wizardry. <br />
+Only x86 architectures are supported at the moment. Most of the code is written in C, porting it to other architectures isn't wizardry. <br />
 The more complex parts are the assembler sources, which are tied to x86. Porting the loader to x64 may cause some headaches. <br />
 It's name was derived from [Chaim Miller](https://www.imdb.com/title/tt4591236/), the real Inglourious Basterd. <br />
 Why did I choose that name you may ask. Long story - to make it short: I love his attitude! <br />
