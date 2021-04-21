@@ -48,15 +48,18 @@ If you want a basic CNC communication you should start the cncproxy first with: 
  2. `wine loader_base.exe` (<b>PART</b> encrypted binary) <br />
  3. <b>OR</b> `wine loader_base_enc.exe` (<b>FULL</b> encrypted binary) <br />
  4. run `wine dummy.exe 120` which should now be infected and try to contact the CNC service <br />
+
 Other intresting executables: <br />
  * `wine runbin.exe libw32miller_pre-shared.dll` <br />
  * `wine runbin.exe libw32miller-shared.dll` <br />
  * `wine runbin.exe bin/w32miller_pre.bin` <br />
  * `wine runbin.exe bin/w32miller.bin` <br />
 <br />
+
 Test Windows Portable Executable compliance: <br />
  * `wine loadmodule.exe bin/libw32miller_pre-shared.dll` <br />
  * `wine loadmodule.exe bin/libw32miller-shared.dll` <br />
+
 UNIT tests: <br />
  * `wine tests.exe` <br />
 <br />
@@ -79,17 +82,22 @@ features
 how it works
 ========
 DLL (infect): <br />
+
  1. DLL adds loader section to target (default: .minit) <br />
  2. DLL adds own section to target (default: .miller) <br />
  3. DLL sets const data in loader <br />
  4. DLL copies the loader to its section <br />
  5. DLL copies itself to its very own section <br />
  6. DLL injects FAR JUMP somewhere near the EntryPoint RVA and set the operand to the loader VA <br />
+
 <br />
 An infected file: <br />
+
  1. somewhere near the Address of EntryPoint RVA it calls the loader entry address <br />
+
 <br />
 LOADER: <br />
+
  1. decrypt strings <br />
  2. get some function pointers/data <br />
  3. copy encrypted DLL section to temporary allocated buffer <br />
@@ -98,8 +106,10 @@ LOADER: <br />
  6. copy sections from (parsed/plain PE file) temp buffer to final destinations <br />
  7. do fixups if image relocation is necessary <br />
  8. jump to the CRT <br />
+
 <br />
 CRT (part of DLL): <br />
+
  1. does minimal initializing <br />
  2. check if started by loader (and set data/register as needed) <br />
  3. setup function parameter <br />
@@ -107,9 +117,12 @@ CRT (part of DLL): <br />
  5. start some threads e.g. infection/network thread
  6. cleanup stack <br />
  7. return to the loader <br />
+
 <br />
 LOADER: <br />
+
  9. cleanup and jump back right after where we were injected <br />
+
 <br />
 
 Command'n'Control (<b>CNC</b>)
@@ -121,6 +134,6 @@ So the cncmaster does not do anything useful at the moment. <br />
 For a very basic test, the cncproxy is sufficient. <br />
 <br />
 
-Documentation (coming soon)
+Documentation (lacking)
 ========
 ![Basic App Architecture](/doc/apps.png)
