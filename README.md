@@ -75,8 +75,8 @@ features
  - tor and patched libtor support <br />
  - minimal x86/x64 disassembler/patcher <br />
  - pe code/data injector <br />
- - command&control communication (http-web2tor/irc; replaced by libtor in the future) <br />
- - python bottle based c&c service <br />
+ - command&control communication (http-web2tor / irc-obsolete; replaced by libtor in the future) <br />
+ - golang based c&c service <br />
 <br />
 
 how it works
