@@ -29,7 +29,7 @@ See <b>INSTALL</b> for more information. <br />
 `./deps/makedeps.sh N` (where N is the number of simultaneous build jobs, default: 1)<br />
 It will download/extract/compile basic developer tools (python-2.7.18, nasm-2.12.02, binutils-2.31.1, gcc-8.2.0, mingw-w64-v6.0.0) <br />
 The Toolchain build is necessary, because we will probably use a patched gcc in the future. <br />
-<b>WARNING</b>: The project may neither compile nor work with other toolchain combinations! <br />
+This project may neither compile nor work with other toolchain combinations! <br />
 <br />
 ## Configure project <br />
 `cd /path/to/project` <br />
@@ -67,15 +67,14 @@ Or use a virtual machine and run it there. (e.g. VirtualBox) <br />
 <br />
 This is an educational mdk only: It tries to infect <b>one</b> windows pe binary named <b>dummy.exe</b> in your current working directory. <br />
 <br />
-<b>WARNING</b>: It is highly recommended to use a VM like <b>virtualbox</b>. Otherwise you should install <b>wine</b>. <br />
+It is recommended using a VM like <b>virtualbox</b>. If you do not care about the integrity of your host OS, <b>wine</b> may work as well. <br />
 
 features
 ========
- - patched mingw64 toolchain (and build script) <br />
- - tor and patched libtor support <br />
+ - mingw64 toolchain (and build script) <br />
  - minimal x86/x64 disassembler/patcher <br />
  - pe code/data injector <br />
- - command&control communication (http-web2tor/irc; replaced by libtor in the future) <br />
+ - command&control communication <br />
  - python bottle based c&c service <br />
 <br />
 
@@ -134,6 +133,6 @@ So the cncmaster does not do anything useful at the moment. <br />
 For a very basic test, the cncproxy is sufficient. <br />
 <br />
 
-Documentation (lacking)
+Documentation (missing)
 ========
-![Basic App Architecture](/doc/apps.png)
+![App Injection Workflow](/doc/apps.png)
