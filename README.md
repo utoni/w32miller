@@ -75,7 +75,7 @@ features
  - minimal x86/x64 disassembler/patcher <br />
  - pe code/data injector <br />
  - command&control communication <br />
- - python bottle based c&c service <br />
+ - golang based c&c service <br />
 <br />
 
 how it works
