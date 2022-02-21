@@ -185,7 +185,7 @@ dl_and_extract_gz "${MILLER_PYTHON}" "https://www.python.org/ftp/python/2.7.18/$
 #fi
 
 dl_and_extract_bz "${MINGW}" "https://downloads.sourceforge.net/project/mingw-w64/mingw-w64/mingw-w64-release/${MINGW}.tar.bz2"
-dl_and_extract_gz "${ISL}" "http://isl.gforge.inria.fr/${ISL}.tar.gz"
+dl_and_extract_gz "${ISL}" "https://libisl.sourceforge.io/${ISL}.tar.gz"
 dl_and_extract_gz "${BIN}" "https://ftp.gnu.org/gnu/binutils/${BIN}.tar.gz"
 dl_and_extract_gz "${GCC}" "https://ftp.gnu.org/gnu/gcc/${GCC}/${GCC}.tar.gz"
 dl_and_extract_gz "${MUSL}" "https://www.musl-libc.org/releases/${MUSL}.tar.gz"
