@@ -1,3 +1,5 @@
+[![Gitlab-CI](https://gitlab.com/utoni/w32miller/badges/master/pipeline.svg)](https://gitlab.com/utoni/w32miller/-/pipelines)
+
 abstract
 ========
 The project emerged during my studies. <br />
