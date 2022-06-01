@@ -124,6 +124,13 @@ tests-release:
     - wine bin/tests.exe 1>&2 || { tail -n10 tests.log; false; }
     - wine bin/loadmodule.exe bin/libw32miller-shared.dll
     - wine bin/loadmodule.exe bin/libw32miller_pre-shared.dll
+    - wine bin/decrypter.exe bin/libw32miller-shared.dll
+    - wine bin/decrypter.exe bin/libw32miller_pre-shared.dll
+    - wine bin/decrypter.exe bin/loader_base.exe
+    - wine bin/decrypter.exe bin/loader_base_enc.exe
+    - wine bin/decrypter.exe bin/release.exe
+    - wine bin/loader_decrypt.exe
+    - wine bin/disasm.exe -fbin/release.exe
     - kill -SIGKILL ${XVFB_PID}
   stage: test-wine
   only:

@@ -17,7 +17,7 @@ int main(int argc, char** argv) {
     } else if (argc == 1) {
         path = dirname(argv[0]);
     } else {
-        printf("usage: %s [|PATH_TO_DLL]\n", path);
+        printf("usage: %s [|PATH_TO_DLL]\n", argv[0]);
         return 1;
     }
  

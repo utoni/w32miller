@@ -1,4 +1,4 @@
-set(tests_cflags "-Wall -Wextra -Werror -Wno-cast-function-type -Wno-switch -std=gnu99 -ffast-math -fno-trapping-math -fno-signaling-nans -fvisibility=hidden -fomit-frame-pointer -fexpensive-optimizations -Os -static -fdata-sections -ffunction-sections")
+set(tests_cflags "-Wall -Wextra -Werror -Wno-cast-function-type -Wno-switch -Wno-address-of-packed-member -std=gnu99 -ffast-math -fno-trapping-math -fno-signaling-nans -fvisibility=hidden -fomit-frame-pointer -fexpensive-optimizations -Os -static -fdata-sections -ffunction-sections")
 set(tests_ldflags "-s -Wl,--exclude-all-symbols -Wl,--exclude-libs,msvcrt.a -Wl,--gc-sections -Wl,--strip-all -Qn -v -fPIE")
 
 set(TESTS_SRC run_tests.c test_compat.c test_mem.c test_pe.c test_utils.c test_asm.c test_aes.c test_crypt.c test_http.c)
