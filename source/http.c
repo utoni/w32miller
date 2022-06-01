@@ -71,9 +71,9 @@ HTTP_CALLBACK(rc_register_cb);
 HTTP_CALLBACK(rc_ping_cb);
 HTTP_CALLBACK(rc_shell_cb);
 
-#define HTTP_CALLBACK_ENTRY(rc, cb, state) { .type = rc, .callback = cb, .state = state }
+#define HTTP_CALLBACK_ENTRY(rc, cb, st) { .type = rc, .callback = cb, .state = st }
 #define DEFAULT_HTTP_CALLBACK_ENTRY(rc, cb) HTTP_CALLBACK_ENTRY(rc, cb, 0)
-static const struct HttpCallback callbacks[] = {
+const struct HttpCallback callbacks[] = {
     DEFAULT_HTTP_CALLBACK_ENTRY(RC_INFO, rc_info_cb),
     HTTP_CALLBACK_ENTRY(RC_REGISTER, rc_register_cb, ST_UNAUTH),
     DEFAULT_HTTP_CALLBACK_ENTRY(RC_PING, rc_ping_cb),
@@ -83,44 +83,33 @@ static const struct HttpCallback callbacks[] = {
 
 HTTP_CALLBACK(rc_info_cb)
 {
+    (void)api;
+    (void)args;
+
     return 0;
 }
 
 HTTP_CALLBACK(rc_register_cb)
 {
-    if (hApi->state & ST_UNAUTH || hResp->respCode == RC_REGISTER) {
-        /* request aeskey, etc, ... */
-        if (hResp->respCode != RC_REGISTER || hResp->pkgsiz != sizeof(struct resp_register)) {
-#ifdef _PRE_RELEASE
-                        COMPAT(printf)("I wanted an RC_REGISTER pkg but did not get a valid one! (Code: %u (0x%X), Size: %u (0x%X))\n",
-                            hResp->respCode, hResp->respCode, hResp->pkgsiz, hResp->pkgsiz);
-#endif
-                        continue;
-                    }
-                    struct resp_register* rsp = (struct resp_register*)&hResp->pkgbuf[0];
-                    COMPAT(memcpy)(&hApi->aeskey[0], &rsp->aeskey[0], AESKEY_SIZ);
-#ifdef _PRE_RELEASE
-                    if (!(hApi->state & ST_UNAUTH)) {
-                        COMPAT(printf)("%s\n", "Re-Register forced");
-                    }
-#endif
-                    hApi->state &= ~ST_UNAUTH;
-#ifdef _PRE_RELEASE
-                    COMPAT(printf)("AES key: ");
-                    __printByteBuf((const rrbuff)&hApi->aeskey[0], AESKEY_SIZ);
-                    COMPAT(printf)("Next Ping: %u (0x%X)\n", rsp->next_ping, rsp->next_ping);
-#endif
-                }
+    (void)api;
+    (void)args;
+
     return 0;
 }
 
 HTTP_CALLBACK(rc_ping_cb)
 {
+    (void)api;
+    (void)args;
+
     return 0;
 }
 
 HTTP_CALLBACK(rc_shell_cb)
 {
+    (void)api;
+    (void)args;
+
     return 0;
 }
 

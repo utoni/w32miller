@@ -42,6 +42,7 @@ set(DISTORM_PRE_SRC ${DISTORM_SRC} wstring.c textdefs.c CACHE INTERNAL "" FORCE)
 PrefixPath(DISTORM_SRC ${DISTORM_SRCDIR} ${DISTORM_SRC})
 PrefixPath(DISTORM_PRE_SRC ${DISTORM_SRCDIR} ${DISTORM_PRE_SRC})
 
+include_directories(AFTER ${MILLER_SRCDIR})
 include_directories(AFTER ${MILLER_HDRDIR})
 include_directories(AFTER ${DISTORM_SRCDIR})
 
