@@ -22,7 +22,7 @@ makedeps:
       - deps/build.log
   stage: deps
   only:
-    - master
+    - main
 
 makedeps-again:
   script:
@@ -38,7 +38,7 @@ makedeps-again:
       - deps/build.log
   stage: deps
   only:
-    - master
+    - main
   when: manual
   allow_failure: true
 
@@ -54,7 +54,7 @@ build:
       - bin/
   stage: build
   only:
-    - master
+    - main
   dependencies:
     - makedeps
 
@@ -70,7 +70,7 @@ build-debug:
       - bin/
   stage: build
   only:
-    - master
+    - main
   dependencies:
     - makedeps
 
@@ -86,7 +86,7 @@ build-release:
       - bin/
   stage: build
   only:
-    - master
+    - main
   dependencies:
     - makedeps
 
@@ -119,7 +119,7 @@ tests-debug:
     - kill -SIGKILL ${XVFB_PID}
   stage: test-wine
   only:
-    - master
+    - main
   dependencies:
     - build-debug
 
@@ -152,7 +152,7 @@ tests-release:
     - kill -SIGKILL ${XVFB_PID}
   stage: test-wine
   only:
-    - master
+    - main
   dependencies:
     - build-release
 
@@ -165,7 +165,7 @@ tests-host-tools:
     - echo 'import sys, imp; mod = imp.load_dynamic("pycrypt", "bin/pycrypt"); print mod; mod.info()' | deps/sysroot/bin/python2.7
   stage: test-host
   only:
-    - master
+    - main
   dependencies:
     - build-release
 
@@ -179,7 +179,7 @@ tests-release-mdk:
     - pwd
   stage: test-wine
   only:
-    - master
+    - main
   dependencies:
     - build-release
 
@@ -193,7 +193,7 @@ tests-debug-mdk:
     - pwd
   stage: test-wine
   only:
-    - master
+    - main
   dependencies:
     - build-debug
 

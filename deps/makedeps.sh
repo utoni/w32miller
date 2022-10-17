@@ -72,7 +72,7 @@ export NASM=nasm-2.12.02
 #export TOR=tor-0.3.0.9
 export PKGCONFIG=pkg-config-0.29.2
 export OPENSSL=openssl-1.1.1f
-export ZLIB=zlib-1.2.12
+export ZLIB=zlib-1.2.13
 export LIBEVENT=libevent-2.1.8-stable
 
 export BUILDDIRS="build_python build_binutils build_gcc build_musl build_tor build_mingw_binutils build_mingw_hdr build_mingw_crt build_mingw_gcc build_nasm build_mingw_winpthread build_pkgconfig build_mingw_openssl build_mingw_zlib build_mingw_libevent build_mingw_tor"
